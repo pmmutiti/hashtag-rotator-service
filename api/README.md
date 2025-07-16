@@ -1,6 +1,6 @@
 
-# 🌍 Hashtag Rotator Microservice This service fetches trending Twitter hashtags by region from Trends24 and returns them as JSON. ## 📡 Endpoint 
+# 🌍 Hashtag Rotator Microservice Fetches top trending hashtags by region from Trends24 and returns them as JSON. Designed for civic blogs, CTA buttons, dashboards, and activist platforms. --- ## 📡 Endpoint Format 
 
-/api/trends?region=kenya
+GET /api/trends?region=kenya
 
-## 🧪 Example Response ```json { "hashtags": ["#Ngong", "#SabaSaba2025", "#Nairobi"] } 
+Supported regions: - kenya - usa - uk --- ## 🧪 Sample JSON Response ```json { "hashtags": ["#Ngong", "#SabaSaba2025", "#JusticeForJuliaNjoki"] } 
