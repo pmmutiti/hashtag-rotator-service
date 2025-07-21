@@ -14,11 +14,11 @@ This serverless microservice fetches **real-time trending hashtags** from [Trend
 - Extracts trending hashtags by region
 - Returns structured JSON via a simple REST API
 
-### 🧪 Example Endpoint
+
+🧪 Example Endpoint
+
+GET /api/trends?region=kenya 
 
 Returns:
-```json
-{
-  "region": "kenya",
-  "hashtags": ["#MaandamanoMondays", "#NairobiProtests", "#DigitalDignity"]
-}
+
+{ "region": "kenya", "hashtags": ["#MaandamanoMondays", "#NairobiProtests", "#DigitalDignity"] } 
