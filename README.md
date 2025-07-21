@@ -24,5 +24,11 @@ This serverless microservice fetches **real-time trending hashtags** from [Trend
 }
 
 curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_L617KcSia649VrJ1fmAxziaOMqsZ/MDi3TFnUYo
+├── api/
+│   ├── trends.js       # Fetch and parse hashtags
+│   └── health.js       # Health check endpoint
+├── vercel.json         # Deployment config
+├── README.md           # You’re reading this!
+└── LICENSE             # MIT license terms
 
 
