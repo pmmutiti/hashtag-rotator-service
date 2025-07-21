@@ -16,3 +16,4 @@ This serverless microservice fetches **real-time trending hashtags** from [Trend
 
 ### 🧪 Example Endpoint
 GET /api/trends?region=kenya Returns: { "region": "kenya", "hashtags": ["#MaandamanoMondays", "#NairobiProtests", "#DigitalDignity"] }
+curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_L617KcSia649VrJ1fmAxziaOMqsZ/MDi3TFnUYo
