@@ -1,4 +1,4 @@
-y## 📡 Hashtag Rotator Service
+## 📡 Hashtag Rotator Service
 
 This serverless microservice fetches **real-time trending hashtags** from [Trends24.in](https://trends24.in) based on a region query. It’s designed to power:
 
