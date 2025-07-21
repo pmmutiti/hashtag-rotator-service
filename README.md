@@ -1,9 +1,17 @@
+## 📡 Hashtag Rotator Service
 
+This serverless microservice fetches **real-time trending hashtags** from [Trends24.in](https://trends24.in) based on a region query. It’s designed to power:
 
-This serverless microservice fetches real-time trending hashtags from Trends24.in based on a region query. It’s designed for civic dashboards, rotating headline widgets, and data-driven journalism tools that spotlight public conversations.
+- 🏛️ Civic dashboards  
+- 📰 Data-driven journalism tools  
+- 🎯 Rotating headline widgets that spotlight public conversations  
 
-The function parses HTML from Trends24, extracts hashtags, and returns them as JSON using the following endpoint structure:
+---
 
-GET /api/trends?region=kenya 
+## 🔧 How It Works
 
-## 📜 License This project is licensed under the MIT License © 2025 Peter M. Mutiti. You're free to use, modify, and deploy this tool for civic and public good. See the LICENSE file for details. 
+- Fetches and parses live HTML from Trends24
+- Extracts trending hashtags by region
+- Returns structured JSON via a simple REST API
+
+### 🧪 Example Endpoint
