@@ -16,4 +16,11 @@ This serverless microservice fetches **real-time trending hashtags** from [Trend
 
 ### 🧪 Example Endpoint
 
+**Returns:**
+```json
+{
+  "region": "kenya",
+  "hashtags": ["#MaandamanoMondays", "#NairobiProtests", "#DigitalDignity"]
+}
+
 
