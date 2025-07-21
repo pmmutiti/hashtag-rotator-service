@@ -10,6 +10,17 @@ This serverless microservice fetches **real-time trending hashtags** from [Trend
 
 ## 🔧 How It Works
 
+- Fetches and parses live HTML from Trends24  
+- Extracts trending hashtags by region  
+- Returns structured JSON via a simple REST API
+
+### 🧪 Example Endpoint
+
+
+---
+
+## 🔧 How It Works
+
 - Fetches and parses live HTML from Trends24
 - Extracts trending hashtags by region
 - Returns structured JSON via a simple REST API
