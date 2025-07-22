@@ -40,33 +40,31 @@ curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_L617KcSia649VrJ1f
 
 🗂️ Project Structure
 
-hashtag-rotator-service/      ← 🟢 Root folder
-├── api/                      ← 🔧 Vercel serverless functions
-│   ├── trends.js             ← Region-aware hashtag fetcher
-│   ├── cron.js               ← Daily scheduled task (e.g. timestamp log, refresh)
-│   └── health.js             ← Edge region & service status monitor
-├── vercel.json               ← Deployment config:
-│                             ├─ Cron job scheduler
-│                             └─ Geo-routed & proxy rewrites
-├── test.sh                   ← 🧪 Endpoint test suite (curl-based + logging)
-├── README.md                 ← 📚 Public-facing documentation for remixers
-├── package.json              ← 📦 Dependencies: axios, cheerio, etc.
-├── LICENSE                   ← 📜 MIT license for open-source reuse
-└── .gitignore                ← 🧼 Clean commits: skip logs, node_modules, etc.
+hashtag-rotator-service/          ← ✅ Root folder (public-facing civic microservice)
+├── api/                          ← 🔧 Serverless functions (Vercel Edge)
+│   ├── cron.js                   ← Timestamp job for automation (now error-handled)
+│   ├── health.js                 ← Service check + edge region awareness
+│   └── trends.js                 ← Region-aware hashtag fetcher from Trends24
+├── .gitignore                    ← 🧼 Filters out logs, builds, secrets (repo hygiene)
+├── LICENSE                       ← 📜 MIT license for open-source freedom
+├── README.md                     ← 📚 Project intro + usage + remix guidance
+├── CONTRIBUTING.md               ← 🤝 Collaboration rules for remixers and maintainers
+├── package.json                  ← 📦 Dependencies: axios, cheerio, etc.
+├── test.sh                       ← 🧪 Endpoint tester with curl + logging + headers
+├── vercel.json                   ← ⚙️ Deploy config:
+│                                 ├── Cron job scheduler
+│                                 ├── Geo-routing via rewrites (`/kenya-trends`)
+│                                 └── Proxy config (`/data/:slug`)
+└── test-log-*.txt                ← 🗒️ Timestamped test results (auto-created by `test.sh`)
 
+Deployment Capabilities
 
-📝 License
+- 💬 Endpoints: `/api/trends`, `/api/health`, `/api/cron`
+- ⏰ Scheduled tasks: Vercel cron every morning
+- 🌍 Geo-aware routing: `/kenya-trends` rewrite based on visitor country
+- 🔍 Testing tool: `test.sh` to validate live health, trends, cron responses
+- 🛡️ Built-in crash protection: try/catch guards in API handlers
+- 📚 Open collaboration: Git-optimized layout + clear contributing flow
 
-This project is licensed under the MIT License. You are free to remix, reuse, and redistribute with attribution.
-
-Signed-off-by: Peter M. Mutiti 52533415+pmmutiti@users.noreply.github.com
-
-👥 Contributing
-
-Please commit with --signoff and ensure you have rights to remix or submit codeOpen issues for feature requests, region support, or civic expansion ideasFork the project and amplify civic transparency ✊📊 
-
-🙌 Acknowledgments
-
-Built with 💚 for open-source civic tech by Peter M. Mutiti and remixers everywhere.
-Special thanks to Trends24.in for powering hashtag awareness.
+---
 
