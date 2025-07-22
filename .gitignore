@@ -1,1 +1,2 @@
 
+# Node dependencies node_modules/ # Logs *.log # Vercel build output .vercel/ .vercel/output/ # Environment config .env # macOS system files .DS_Store # Shell test logs test-log-*.txt 
