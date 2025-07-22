@@ -1,4 +1,2 @@
 
-{ "crons": [ { "path": "/api/cron", "schedule": "0 10 * * *" } ] } 
-
-{ "rewrites": [ { "source": "/data/:slug", "destination": "https://api.example.com/data/:slug" } ] } 
+{ "crons": [ { "path": "/api/cron", "schedule": "0 10 * * *" } ], "rewrites": [ { "source": "/kenya-trends", "has": [ { "type": "header", "key": "x-vercel-ip-country", "value": "KE" } ], "destination": "/api/trends?region=kenya" }, { "source": "/kenya-trends", "destination": "/api/trends?region=global" }, { "source": "/trends/:region", "destination": "/api/trends?region=:region" } ] } 
