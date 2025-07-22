@@ -1,2 +1,1 @@
-
-export default async function handler(req, res) { const now = new Date().toISOString(); console.log("Cron triggered at", now); res.status(200).json({ message: "Cron ran successfully", timestamp: now }); } 
+export default async function handler(req, res) { try { const now = new Date().toISOString(); console.log("🔁 Cron triggered at", now); res.status(200).json({ message: "Cron ran successfully", timestamp: now }); } catch (error) { console.error("🚨 Cron failure:", error); res.status(500).json({ error: "Cron execution failed", details: error.message || "Unknown error" }); } } 
