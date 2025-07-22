@@ -1,1 +1,2 @@
 
+# 🤝 Contributing to Hashtag Rotator Service Welcome! This project powers civic dashboards and data-driven journalism by surfacing trending hashtags per region. We love open-source contributions that amplify public awareness, accountability, and remixable transparency ✊📡 --- ## 🧑‍💻 How to Contribute ### 🔧 1. Fork + Clone ```bash git clone https://github.com/pmmutiti/hashtag-rotator-service.git cd hashtag-rotator-service 
