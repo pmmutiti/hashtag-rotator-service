@@ -40,7 +40,20 @@ curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_L617KcSia649VrJ1f
 
 🗂️ Project Structure
 
-hashtag-rotator-service/ ├── api/ │ ├── trends.js # Region-aware hashtag fetcher │ ├── cron.js # Scheduled civic job │ └── health.js # Reports edge region + service status ├── vercel.json # Deployment + cron configuration ├── package.json # Dependencies: axios, cheerio ├── README.md # This file ✨ └── LICENSE # MIT license 
+hashtag-rotator-service/      ← 🟢 Root folder
+├── api/                      ← 🔧 Vercel serverless functions
+│   ├── trends.js             ← Region-aware hashtag fetcher
+│   ├── cron.js               ← Daily scheduled task (e.g. timestamp log, refresh)
+│   └── health.js             ← Edge region & service status monitor
+├── vercel.json               ← Deployment config:
+│                             ├─ Cron job scheduler
+│                             └─ Geo-routed & proxy rewrites
+├── test.sh                   ← 🧪 Endpoint test suite (curl-based + logging)
+├── README.md                 ← 📚 Public-facing documentation for remixers
+├── package.json              ← 📦 Dependencies: axios, cheerio, etc.
+├── LICENSE                   ← 📜 MIT license for open-source reuse
+└── .gitignore                ← 🧼 Clean commits: skip logs, node_modules, etc.
+
 
 📝 License
 
