@@ -1,2 +1,4 @@
 
 { "crons": [ { "path": "/api/cron", "schedule": "0 10 * * *" } ] } 
+
+{ "rewrites": [ { "source": "/data/:slug", "destination": "https://api.example.com/data/:slug" } ] } 
