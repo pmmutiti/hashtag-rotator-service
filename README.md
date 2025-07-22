@@ -18,10 +18,4 @@ GET /api/trends?region=kenya Returns: { "region": "kenya", "hashtags": ["#Maanda
 
 curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_L617KcSia649VrJ1fmAxziaOMqsZ/MDi3TFnUYo
 
-├── api/
-│   ├── trends.js       # Fetch and parse hashtags
-│   └── health.js       # Health check endpoint
-├── vercel.json         # Deployment config
-├── README.md           # You’re reading this!
-└── LICENSE             # MIT license terms
-
+hashtag-rotator-service/ ├── api/ │ ├── trends.js # Region-aware hashtag fetcher │ ├── cron.js # Scheduled civic job │ └── health.js # This file — exposes edge insight ├── vercel.json # Deployment + cron settings ├── package.json # Dependencies like axios, cheerio ├── README.md # Remixable documentation └── LICENSE # MIT license 
