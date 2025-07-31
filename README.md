@@ -35,7 +35,7 @@ Key use cases:
 ### 1. Fork + Clone
 
 ```bash
-git clone https://github.com/petermutiti/hashtag-rotator-service.git
+git clone https://github.com/pmmutiti/hashtag-rotator-service.git
 cd hashtag-rotator-service
 ```
 
