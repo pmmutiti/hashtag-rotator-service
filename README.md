@@ -40,22 +40,26 @@ curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_L617KcSia649VrJ1f
 
 🗂️ Project Structure
 
-hashtag-rotator-service/          ← ✅ Root folder (public-facing civic microservice)
-├── api/                          ← 🔧 Serverless functions (Vercel Edge)
-│   ├── cron.js                   ← Timestamp job for automation (now error-handled)
-│   ├── health.js                 ← Service check + edge region awareness
-│   └── trends.js                 ← Region-aware hashtag fetcher from Trends24
-├── .gitignore                    ← 🧼 Filters out logs, builds, secrets (repo hygiene)
-├── LICENSE                       ← 📜 MIT license for open-source freedom
-├── README.md                     ← 📚 Project intro + usage + remix guidance
-├── CONTRIBUTING.md               ← 🤝 Collaboration rules for remixers and maintainers
-├── package.json                  ← 📦 Dependencies: axios, cheerio, etc.
-├── test.sh                       ← 🧪 Endpoint tester with curl + logging + headers
-├── vercel.json                   ← ⚙️ Deploy config:
-│                                 ├── Cron job scheduler
-│                                 ├── Geo-routing via rewrites (`/kenya-trends`)
-│                                 └── Proxy config (`/data/:slug`)
-└── test-log-*.txt                ← 🗒️ Timestamped test results (auto-created by `test.sh`)
+hashtag-rotator-service/
+├── api/
+│   ├── cron.js               ← Timestamped auto-refresh (daily)
+│   ├── health.js             ← Region-aware service diagnostics
+│   ├── trends.js             ← Region-specific hashtag scraper
+│   └── github-webhook.js     ← GitHub deployment event listener
+├── config/
+│   └── webhook-events.json   ← Deployment event map
+├── diagnostics/
+│   ├── delivery-log-*.txt    ← GitHub event metadata snapshots
+│   ├── webhook-payloads/     ← Logged JSON payloads
+│   └── errors/               ← Signature failures + endpoint issues
+├── .gitignore                ← Repo hygiene + secret filtering
+├── LICENSE                   ← MIT License
+├── README.md                 ← This file
+├── CONTRIBUTING.md           ← Guidelines for remixers and maintainers
+├── package.json              ← Dependencies + type declarations
+├── vercel.json               ← Route + build config for serverless deploy
+├── test.sh                   ← Endpoint validation script (`curl` based)
+└── civic-preview.html        ← Visual dashboard prototype (optional)
 
 Deployment Capabilities
 
