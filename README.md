@@ -1,201 +1,128 @@
 
+```md
 # 📡 hashtag-rotator-service
 
-_Modular civic microservice for rotating regional hashtags, tracking GitHub deploy events, and powering public dashboards. Designed for journalists, technologists, and remixers focused on public transparency and engagement._
+_Modular serverless microservice for rotating region-aware hashtags, logging GitHub events, and powering public dashboards. Ideal for civic technologists, journalists, and remixers._
 
 ---
 
-## 🔍 Overview
+## 🧠 About This Project
 
-Fetches trending hashtags from [Trends24.in](https://trends24.in) based on region input, and exposes them via edge-ready API endpoints. Logs GitHub webhook deliveries, includes scheduled cron refresh, and supports geo-aware routing — deployable via Vercel.
+This project fetches real-time trending hashtags from [Trends24](https://trends24.in) and serves them via region-specific API endpoints. It includes scheduled cron tasks, GitHub webhook logging, and geo-aware routing — all deployed seamlessly on [Vercel](https://vercel.com).
 
----
-
-## 🧪 API Endpoints
-
-### `/api/trends?region=kenya`
-
-```json
-{
-  "region": "kenya",
-  "hashtags": [
-    "#MaandamanoMondays",
-    "#NairobiProtests",
-    "#DigitalDignity"
-  ]
-}
-```
-
-💡 Valid regions: `kenya`, `usa`, `south-africa`, `india`, `nigeria`, etc.
+Key use cases:
+- 🏛️ Civic dashboards
+- 📰 Media headline rotators
+- 🧩 Remixable region-aware tools
 
 ---
 
-### `/api/health`
+## 🛠️ Features
 
-Returns status + edge metadata:
-
-```json
-{
-  "status": "ok",
-  "service": "hashtag-rotator-service",
-  "edgeRegion": "sfo1",
-  "timestamp": "2025-07-31T06:00:00.000Z"
-}
-```
-
-Responds with HTTP header: `x-edge-region: sfo1`
+| Capability             | Details                                                                 |
+|------------------------|-------------------------------------------------------------------------|
+| 💬 API Endpoints       | `/api/trends`, `/api/health`, `/api/cron`, `/api/github-webhook`        |
+| ⏰ Cron Scheduling      | Vercel triggers `/api/cron` daily at 10:00 UTC (1PM Nairobi)             |
+| 📡 GitHub Webhook      | Endpoint logs event payloads to `diagnostics/` with HMAC verification   |
+| 🌍 Geo Routing          | Kenya visitors rerouted to `/kenya-trends` using IP headers             |
+| 🛡️ Crash Protection     | All handlers use `try/catch` blocks for resilience                      |
+| 🔍 Testing Script       | `test.sh` validates endpoint response and logs headers                  |
 
 ---
 
-## ⏰ Scheduled Cron
+## 🚀 Quick Start Guide
 
-Configured in `vercel.json` to trigger at 10:00 UTC (1PM Nairobi):
-
-```json
-{
-  "crons": [
-    {
-      "path": "/api/cron",
-      "schedule": "0 10 * * *"
-    }
-  ]
-}
-```
-
-Logs timestamp:
-```js
-console.log("Cron triggered at", new Date().toISOString());
-```
-
----
-
-## 📡 GitHub Webhook Listener
-
-Endpoint: `/api/github-webhook`
-
-- HMAC-verified using `GITHUB_WEBHOOK_SECRET`
-- Incoming payloads logged in `diagnostics/webhook-payloads/`
-- Delivery logs timestamped to `diagnostics/delivery-log-*.txt`
-
-Example log:
-```json
-{
-  "event": "push",
-  "repo": "hashtag-rotator-service",
-  "timestamp": "2025-07-31T07:20:00Z"
-}
-```
-
----
-
-## 🗂️ Project Structure
-
-```plaintext
-hashtag-rotator-service/
-├── api/
-│   ├── cron.js               ← Daily timestamped auto-refresh
-│   ├── health.js             ← Region-aware diagnostics
-│   ├── trends.js             ← Hashtag scraper from Trends24.in
-│   └── github-webhook.js     ← GitHub deploy event logger
-├── config/
-│   └── webhook-events.json   ← Event routing map
-├── diagnostics/
-│   ├── delivery-log-*.txt    ← GitHub delivery metadata
-│   ├── webhook-payloads/     ← JSON payload snapshots
-│   └── errors/               ← Signature mismatch traces
-├── .gitignore                ← Clean secrets, logs, and builds
-├── LICENSE                   ← MIT — free to remix
-├── README.md                 ← This file
-├── CONTRIBUTING.md           ← Remix guidelines + standards
-├── package.json              ← Dependencies: axios, cheerio, crypto, etc.
-├── vercel.json               ← Builds, crons, rewrites, webhook routes
-├── test.sh                   ← Endpoint testing script (`curl` based)
-└── civic-preview.html        ← Visual dashboard template (optional)
-```
-
----
-
-## 🚀 Deployment
+### 1. Fork + Clone
 
 ```bash
-vercel deploy
+git clone https://github.com/petermutiti/hashtag-rotator-service.git
+cd hashtag-rotator-service
 ```
 
-Or trigger via deploy hook:
+### 2. Install Dependencies
 
 ```bash
-curl -X POST https://api.vercel.com/v1/integrations/deploy/YOUR_PROJECT_ID/YOUR_HOOK_ID
+npm install
 ```
 
----
-
-## 🌍 Geo-Aware Routing
-
-Visitors from Kenya are redirected to:
-
-```json
-{
-  "source": "/kenya-trends",
-  "has": [
-    {
-      "type": "header",
-      "key": "x-vercel-ip-country",
-      "value": "KE"
-    }
-  ],
-  "destination": "/api/trends?region=kenya"
-}
-```
-
-Fallback:
-```json
-{
-  "source": "/kenya-trends",
-  "destination": "/api/trends?region=global"
-}
-```
-
----
-
-## 🔍 Local Testing
-
-Make `test.sh` executable:
+### 3. Run Endpoint Tests
 
 ```bash
 chmod +x test.sh
 ./test.sh
 ```
 
-Tests:
-- `/api/health`
-- `/api/trends`
-- `/api/cron`
-- Logs response status + headers
+---
+
+## 🔁 GitHub Webhook Setup
+
+1. Add a secret `GITHUB_WEBHOOK_SECRET` in Vercel env variables  
+2. Configure webhook to post to:
+
+```
+https://your-vercel-domain/api/github-webhook
+```
+
+3. Payloads will auto-log to:
+
+```
+diagnostics/webhook-payloads/
+diagnostics/delivery-log-*.txt
+```
 
 ---
 
-## 🤝 Contribution Workflow
+## 🌐 Project Structure
 
-We welcome civic-minded remixers.
-
-```bash
-# Steps to contribute:
-Fork → Branch → Commit → Pull Request
+```plaintext
+hashtag-rotator-service/
+├── api/
+│   ├── cron.js               ← Timestamped auto-refresh (daily)
+│   ├── health.js             ← Region-aware diagnostics
+│   ├── trends.js             ← Hashtag scraper
+│   └── github-webhook.js     ← GitHub deploy event listener
+├── config/
+│   └── webhook-events.json   ← Event routing map
+├── diagnostics/
+│   ├── delivery-log-*.txt    ← GitHub delivery logs
+│   ├── webhook-payloads/     ← Event JSON snapshots
+│   └── errors/               ← Signature errors + tracebacks
+├── civic-preview.html        ← Dashboard preview template
+├── test.sh                   ← Endpoint validation script
+├── CONTRIBUTING.md           ← Contribution guide
+├── LICENSE                   ← MIT License
+├── README.md                 ← This file
+├── package.json              ← Dependencies
+└── vercel.json               ← Builds, crons, rewrites, and routes
 ```
 
-Use semantic commits (`fix:`, `feat:`, `docs:`) and follow style rules in `CONTRIBUTING.md`.
+---
+
+## 🤝 Contributing
+
+We welcome civic remixers and public infrastructure collaborators.  
+Please follow these steps:
+
+1. Fork this repo  
+2. Create your feature branch (`feat:region-routing`)  
+3. Commit changes with semantic tags (`fix:`, `feat:`, `docs:`)  
+4. Submit a Pull Request
+
+See `CONTRIBUTING.md` for standards and best practices.
 
 ---
 
 ## 📜 License
 
-MIT — free to remix, fork, and deploy. Attribution encouraged.
+Licensed under MIT. You are free to remix, fork, extend, and redeploy.  
+Attribution encouraged, civic transparency expected.
 
 ---
 
 ## 💬 Support
 
-Open an issue or contact [@petermutiti](https://github.com/petermutiti).  
-For civic dashboard integration, deployment issues, or webhook tracing — we respond.
+For deployment help or remix integration, contact [@pmmutiti](https://github.com/pmmutiti).  
+You may also open an issue or start a discussion thread.
 
 ```
+
