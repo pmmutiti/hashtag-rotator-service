@@ -85,7 +85,7 @@ hashtag-rotator-service/
 │   └── webhook-events.json   ← Event routing map
 ├── diagnostics/
 │   ├── delivery-log-*.txt    ← GitHub delivery logs
-│   ├── webhook-payloads/     ← Event JSON snapshots
+│   ├── webhook-payloads/     ← JSON payload snapshots
 │   └── errors/               ← Signature errors + tracebacks
 ├── civic-preview.html        ← Dashboard preview template
 ├── test.sh                   ← Endpoint validation script
