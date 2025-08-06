@@ -1,2 +1,12 @@
-
-{ "$schema": "https://openapi.vercel.sh/vercel.json", { "name": "hashtag-rotator-service", "version": "1.0.0", "description": "Fetches trending Twitter hashtags by region using Trends24.in and returns them as JSON.", "type": "module", "dependencies": { "axios": "^1.6.7", "cheerio": "^1.0.0-rc.12" }, "license": "MIT" } 
+{
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"name": "hashtag-rotator-service",
+	"version": "1.0.0",
+	"description": "Fetches trending Twitter hashtags by region using Trends24.in and returns them as JSON.",
+	"type": "module",
+	"dependencies": {
+		"axios": "^1.6.7",
+		"cheerio": "^1.0.0-rc.12"
+	},
+	"license": "MIT"
+}
