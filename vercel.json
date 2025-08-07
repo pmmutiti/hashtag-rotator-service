@@ -11,6 +11,9 @@
 	}, {
 		"src": "api/github-webhook.js",
 		"use": "@vercel/node"
+	}, {
+		"src": "api/diagnostics.js",
+		"use": "@vercel/node"
 	}],
 	"crons": [{
 		"path": "/api/cron",
@@ -30,12 +33,5 @@
 	}, {
 		"source": "/trends/:region",
 		"destination": "/api/trends?region=:region"
-	}]
-}
-
-{
-	"builds": [{
-		"src": "api/diagnostics.js",
-		"use": "@vercel/node"
 	}]
 }
