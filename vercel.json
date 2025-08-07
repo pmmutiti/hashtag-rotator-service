@@ -32,3 +32,10 @@
 		"destination": "/api/trends?region=:region"
 	}]
 }
+
+{
+	"builds": [{
+		"src": "api/diagnostics.js",
+		"use": "@vercel/node"
+	}]
+}
