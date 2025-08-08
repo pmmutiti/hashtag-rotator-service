@@ -1,13 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "name": "hashtag-rotator-service",
-  "version": 2,
   "builds": [
     { "src": "api/cron.js", "use": "@vercel/node" },
     { "src": "api/trends.js", "use": "@vercel/node" },
     { "src": "api/github-webhook.js", "use": "@vercel/node" },
     { "src": "api/diagnostics.js", "use": "@vercel/node" },
-    { "src": "api/index.js", "use": "@vercel/node" }
+    { "src": "api/index.js", "use": "@vercel/node" },
+    { "src": "api/hashtag-rotator-service.js", "use": "@vercel/node" }
   ],
   "crons": [
     {
