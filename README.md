@@ -19,7 +19,7 @@ Key use cases:
 
 | Capability             | Details                                                                 |
 |------------------------|-------------------------------------------------------------------------|
-| 💬 API Endpoints       | `/api/trends`, `/api/cron`, `/api/github-webhook`, `/api/diagnostics`   |
+| 💬 API Endpoints       | `/api/trends`, `/api/cron`, `/api/github-webhook`, `/api/diagnostics`, `/api/index`, `/api/hashtag-rotator-service` |
 | ⏰ Cron Scheduling      | Vercel triggers `/api/cron` daily at 10:00 UTC (1PM Nairobi)             |
 | 📡 GitHub Webhook      | Verifies HMAC signature and logs events to `/api/diagnostics`           |
 | 🌍 Geo Routing          | Kenya visitors rerouted to `/kenya-trends` using IP headers             |
