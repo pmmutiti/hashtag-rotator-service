@@ -1,58 +1,29 @@
 {
-	"$schema": "https://openapi.vercel.sh/vercel.json",
-	"builds": [{
-			"src": "api/index.js",
-			"use": "@vercel/node"
-		},
-		{
-			"src": "api/trends.js",
-			"use": "@vercel/node"
-		},
-		{
-			"src": "api/diagnostics.js",
-			"use": "@vercel/node"
-		},
-		{
-			"src": "api/rotator.js",
-			"use": "@vercel/node"
-		},
-		{
-			"src": "api/scrape-trends24.js",
-			"use": "@vercel/node"
-		},
-		{
-			"src": "api/trends24-cache.js",
-			"use": "@vercel/node"
-		},
-		{
-			"src": "api/webhook-listener.js",
-			"use": "@vercel/node"
-		}
-	],
-	"rewrites": [{
-			"source": "/trends/:region",
-			"destination": "/api/trends?region=:region"
-		},
-		{
-			"source": "/kenya-trends",
-			"destination": "/api/trends?region=auto"
-		},
-		{
-			"source": "/diagnostics",
-			"destination": "/api/diagnostics"
-		},
-		{
-			"source": "/trends24",
-			"destination": "/api/trends24-cache"
-		}
-	],
-	"crons": [{
-			"path": "/api/scrape-trends24",
-			"schedule": "0 * * * *"
-		},
-		{
-			"path": "/api/rotator",
-			"schedule": "*/15 * * * *"
-		}
-	]
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/scrape-trends24",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/rotator",
+      "schedule": "*/15 * * * *"
+    }
+  ]
 }
