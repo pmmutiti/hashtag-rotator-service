@@ -5,8 +5,8 @@
     { "src": "api/trends.js", "use": "@vercel/node" },
     { "src": "api/diagnostics.js", "use": "@vercel/node" },
     { "src": "api/rotator.js", "use": "@vercel/node" },
-    { "src": "api/trends24-cache.js", "use": "@vercel/node" },
     { "src": "api/scrape-trends24.js", "use": "@vercel/node" },
+    { "src": "api/trends24-cache.js", "use": "@vercel/node" },
     { "src": "api/webhook-listener.js", "use": "@vercel/node" }
   ],
   "rewrites": [
