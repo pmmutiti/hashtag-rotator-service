@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Civic Hashtag Rotator</title>
+</head>
+<body>
+  <select id="regionSelect">
+    <option value="kenya">Kenya</option>
+    <option value="global">Global</option>
+  </select>
+
+  <div id="headline-text">Loading headlines...</div>
+  <div id="hashtagDisplay">Loading hashtags...</div>
+  <a id="tweetLink" target="_blank">Tweet This</a>
+
+  <div id="diagnostics-panel">
+    <p><strong>Region:</strong> <span id="diagnostic-region">...</span></p>
+    <p><strong>Hashtag:</strong> <span id="diagnostic-hashtag">...</span></p>
+    <p><strong>Timestamp:</strong> <span id="diagnostic-timestamp">...</span></p>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
