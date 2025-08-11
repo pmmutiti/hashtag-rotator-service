@@ -5,8 +5,9 @@
     { "src": "api/trends.js", "use": "@vercel/node" },
     { "src": "api/diagnostics.js", "use": "@vercel/node" },
     { "src": "api/rotator.js", "use": "@vercel/node" },
-    { "src": "api/trends24.js", "use": "@vercel/node" },
-    { "src": "api/webhook.js", "use": "@vercel/node" }
+    { "src": "api/trends24-cache.js", "use": "@vercel/node" },
+    { "src": "api/scrape-trends24.js", "use": "@vercel/node" },
+    { "src": "api/webhook-listener.js", "use": "@vercel/node" }
   ],
   "rewrites": [
     {
@@ -15,18 +16,7 @@
     },
     {
       "source": "/kenya-trends",
-      "has": [
-        {
-          "type": "header",
-          "key": "x-vercel-ip-country",
-          "value": "KE"
-        }
-      ],
-      "destination": "/api/trends?region=kenya"
-    },
-    {
-      "source": "/kenya-trends",
-      "destination": "/api/trends?region=global"
+      "destination": "/api/trends?region=auto"
     },
     {
       "source": "/diagnostics",
@@ -34,12 +24,12 @@
     },
     {
       "source": "/trends24",
-      "destination": "/api/trends24"
+      "destination": "/api/trends24-cache"
     }
   ],
   "crons": [
     {
-      "path": "/api/trends24",
+      "path": "/api/scrape-trends24",
       "schedule": "0 * * * *"
     },
     {
