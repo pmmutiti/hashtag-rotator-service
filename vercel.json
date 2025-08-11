@@ -1,17 +1,43 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "builds": [
-    { "src": "api/cron.js", "use": "@vercel/node" },
-    { "src": "api/trends.js", "use": "@vercel/node" },
-    { "src": "api/github-webhook.js", "use": "@vercel/node" },
-    { "src": "api/diagnostics.js", "use": "@vercel/node" },
-    { "src": "api/index.js", "use": "@vercel/node" },
-    { "src": "api/hashtag-rotator-service.js", "use": "@vercel/node" }
+    {
+      "src": "api/cron.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/trends.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/github-webhook.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/diagnostics.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/hashtag-rotator-service.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/scrape-trends24.js",
+      "use": "@vercel/node"
+    }
   ],
   "crons": [
     {
       "path": "/api/cron",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/scrape-trends24",
+      "schedule": "0 * * * *"
     }
   ],
   "rewrites": [
