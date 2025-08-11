@@ -1,36 +1,32 @@
+// /api/scrape-trends24.js
 import fetch from 'node-fetch';
+import fs from 'fs';
+import path from 'path';
+import cheerio from 'cheerio';
 
 export default async function handler(req, res) {
-  const regions = ["kenya", "usa", "uk"];
-  const scrapedHashtags = {};
-  const regex = /#\w+/g;
-
+  const url = 'https://trends24.in/kenya/';
   try {
-    const promises = regions.map(async (region) => {
-      const response = await fetch(`https://trends24.in/${region}/`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch trends for region: ${region}`);
-      }
-      const html = await response.text();
-      const hashtags = (html.match(regex) || []).slice(0, 5);
-      return { region, hashtags };
+    const response = await fetch(url);
+    const html = await response.text();
+    const $ = cheerio.load(html);
+
+    const hashtags = [];
+    $('.trend-card li a').each((_, el) => {
+      const tag = $(el).text().trim();
+      if (tag.startsWith('#')) hashtags.push(tag);
     });
 
-    const results = await Promise.all(promises);
+    const payload = {
+      updated: new Date().toISOString(),
+      hashtags: { kenya: hashtags }
+    };
 
-    results.forEach(result => {
-      scrapedHashtags[result.region] = result.hashtags;
-    });
+    const filePath = path.resolve('./public', 'trends24.json');
+    fs.writeFileSync(filePath, JSON.stringify(payload, null, 2));
 
-  } catch (error) {
-    console.error("Scraping error:", error.message);
-    regions.forEach(region => {
-      scrapedHashtags[region] = [];
-    });
+    res.status(200).json({ status: 'Scrape successful', count: hashtags.length });
+  } catch (err) {
+    res.status(500).json({ error: 'Scrape failed', details: err.message });
   }
-
-  res.status(200).json({
-    timestamp: new Date().toISOString(),
-    scrapedHashtags
-  });
 }
