@@ -1,38 +1,114 @@
-# 📡 hashtag-rotator-service
+# 📡 Civic Hashtag Rotator
 
-_Modular serverless microservice for rotating region-aware hashtags, logging GitHub events, and powering public dashboards. Ideal for civic technologists, journalists, and remixers._
-
----
-
-## 🧠 About This Project
-
-This project fetches real-time trending hashtags from [Trends24](https://trends24.in) and serves them via region-specific API endpoints. It includes scheduled cron tasks, GitHub webhook logging, and geo-aware routing — all deployed seamlessly on [Vercel](https://vercel.com).
-
-Key use cases:
-- 🏛️ Civic dashboards
-- 📰 Media headline rotators
-- 🧩 Remixable region-aware tools
+A modular, region-aware, auto-updating hashtag rotator built for public dashboards, remixers, and civic technologists. Powered by serverless functions, Trends24 scraping, and diagnostics endpoints.
 
 ---
 
-## 🛠️ Features
+## 🚀 Features
 
-| Capability             | Details                                                                 |
-|------------------------|-------------------------------------------------------------------------|
-| 💬 API Endpoints       | `/api/trends`, `/api/cron`, `/api/github-webhook`, `/api/diagnostics`, `/api/index`, `/api/hashtag-rotator-service` |
-| ⏰ Cron Scheduling      | Vercel triggers `/api/cron` daily at 10:00 UTC (1PM Nairobi)             |
-| 📡 GitHub Webhook      | Verifies HMAC signature and logs events to `/api/diagnostics`           |
-| 🌍 Geo Routing          | Kenya visitors rerouted to `/kenya-trends` using IP headers             |
-| 🧪 Diagnostics API      | `/api/diagnostics` returns delivery logs, verification status, and timestamps |
-| 🛡️ Crash Protection     | All handlers use `try/catch` blocks for resilience                      |
-| 🔍 Testing Script       | `test.sh` validates endpoint response and logs headers                  |
+- ✅ Rotates hashtags from 12+ regions in real time  
+- ✅ Scrapes Trends24 hourly via Vercel cron  
+- ✅ Fallback logic for offline or failed fetches  
+- ✅ Public diagnostics endpoint for auditability  
+- ✅ Region-aware routing via IP headers  
+- ✅ Tweet CTA with auto-generated links  
+- ✅ Headline rotator for civic engagement themes
 
 ---
 
-## 🚀 Quick Start Guide
+## 🧱 Architecture
 
-### 1. Fork + Clone
+| Component                  | Path                          | Description                                      |
+|---------------------------|-------------------------------|--------------------------------------------------|
+| Rotator frontend          | `/public/index.html`          | Displays rotating hashtags + tweet CTA          |
+| Trends API                | `/api/trends.js`              | Serves hashtags by region                       |
+| Trends24 scraper          | `/api/scrape-trends24.js`     | Scrapes Trends24 HTML hourly                    |
+| Cached trends endpoint    | `/api/trends24-cache.js`      | Serves latest scraped hashtags                  |
+| Diagnostics               | `/api/diagnostics.js`         | Shows region fetch status + fallback info       |
+| Cron job (daily)          | `/api/cron.js`                | Rotates fallback hashtags + syncs metadata      |
+| GitHub webhook            | `/api/github-webhook.js`      | Optional: triggers redeploys or syncs           |
 
-```bash
-git clone https://github.com/pmmutiti/hashtag-rotator-service.git
-cd hashtag-rotator-service
+---
+
+## ⏰ Cron Jobs
+
+Configured in `vercel.json`:
+
+```json
+"crons": [
+  {
+    "path": "/api/scrape-trends24",
+    "schedule": "0 * * * *"
+  },
+  {
+    "path": "/api/cron",
+    "schedule": "0 10 * * *"
+  }
+]
+```
+
+---
+
+## 🌍 Region Routing
+
+```json
+"rewrites": [
+  {
+    "source": "/kenya-trends",
+    "has": [{ "type": "header", "key": "x-vercel-ip-country", "value": "KE" }],
+    "destination": "/api/trends?region=kenya"
+  },
+  {
+    "source": "/kenya-trends",
+    "destination": "/api/trends?region=global"
+  },
+  {
+    "source": "/trends/:region",
+    "destination": "/api/trends?region=:region"
+  },
+  {
+    "source": "/trends24",
+    "destination": "/api/trends24-cache"
+  },
+  {
+    "source": "/diagnostics",
+    "destination": "/api/diagnostics"
+  }
+]
+```
+
+---
+
+## 🧪 Diagnostics
+
+Access via:
+
+```
+/diagnostics
+```
+
+Returns:
+
+- Region-by-region fetch status  
+- Total hashtags loaded  
+- Fallback status  
+- Timestamp of last scrape
+
+---
+
+## 📦 Deployment
+
+1. Clone the repo  
+2. Add your `vercel.json` to the root  
+3. Deploy to Vercel  
+4. Cron jobs and rewrites activate automatically  
+5. Visit `/` to see the rotator live
+
+---
+
+## 🛠️ Remix Ideas
+
+- Add region selector to frontend  
+- Visualize diagnostics with heatmap  
+- Log webhook payloads for public observability  
+- Export hashtags to CSV or JSON for civic researchers
