@@ -1,1 +1,43 @@
-const express = require('express'); const crypto = require('crypto'); const bodyParser = require('body-parser'); const app = express(); const PORT = process.env.PORT || 3000; // 👇 Replace with your GitHub webhook secret const WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET || 'your_shared_secret'; // ⚙️ Middleware to parse raw body (needed for signature verification) app.use(bodyParser.json({ verify: rawBodySaver })); function rawBodySaver(req, res, buf, encoding) { req.rawBody = buf; } // 🔐 Verify GitHub payload with HMAC function verifySignature(req) { const signature = req.headers['x-hub-signature-256']; if (!signature) return false; const hmac = crypto .createHmac('sha256', WEBHOOK_SECRET) .update(req.rawBody) .digest('hex'); const expected = `sha256=${hmac}`; return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected)); } // 🎧 Main webhook route app.post('/webhook', (req, res) => { if (!verifySignature(req)) { console.warn('Signature mismatch – possible spoof'); return res.status(401).send('Invalid signature'); } const event = req.headers['x-github-event']; const payload = req.body; console.log(`[${new Date().toISOString()}] Event: ${event}`); console.log('Payload:', JSON.stringify(payload, null, 2)); // 🧠 Do something with payload: log to DB, trigger build, notify dashboard, etc. res.status(200).send('Webhook received'); }); // 🚀 Start listener app.listen(PORT, () => { console.log(`Webhook listener running on port ${PORT}`); }); 
+// /api/webhook-listener.js
+import crypto from 'crypto';
+
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  try {
+    const signature = req.headers['x-hub-signature-256'] || req.headers['X-Hub-Signature-256'];
+    const payload = JSON.stringify(req.body);
+
+    if (!signature || !WEBHOOK_SECRET) {
+      throw new Error('Missing signature or secret key');
+    }
+
+    const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+    const digest = 'sha256=' + hmac.update(payload).digest('hex');
+
+    if (digest !== signature) {
+      console.error('❌ Invalid signature');
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+  } catch (error) {
+    console.error('⚠️ Signature validation error:', error.message);
+    return res.status(401).json({ error: 'Signature validation failed', details: error.message });
+  }
+
+  try {
+    const payload = req.body;
+    console.log('✅ Webhook received:', payload);
+
+    // 🔧 Add your custom logic here
+    // if (payload.event === 'push') { ... }
+
+    res.status(200).json({ status: 'success', message: 'Webhook processed.' });
+  } catch (error) {
+    console.error('🔥 Webhook processing error:', error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+}
