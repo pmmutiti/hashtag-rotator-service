@@ -1,4 +1,3 @@
-// /api/scrape-trends24.js
 import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
