@@ -1,0 +1,40 @@
+# Ignore system files and local dev artifacts
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+.env.local
+.env.*.local
+
+# Ignore build outputs (handled by Vercel)
+dist/
+build/
+.cache/
+.next/
+out/
+
+# Ignore test files and coverage
+__tests__/
+coverage/
+*.test.js
+*.spec.js
+*.test.ts
+*.spec.ts
+
+# Ignore editor and tooling configs
+.vscode/
+.idea/
+*.log
+
+# Ignore remixable docs or drafts not meant for deployment
+drafts/
+notes/
+*.md
+*.txt
+
+# Ignore local assets not needed in production
+assets/raw/
+assets/mock/
+*.psd
+*.sketch
+*.xcf
