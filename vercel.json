@@ -1,17 +1,20 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "builds": [
-    { "src": "api/cron.js", "use": "@vercel/node" },
-    { "src": "api/trends.js", "use": "@vercel/node" },
-    { "src": "api/github-webhook.js", "use": "@vercel/node" },
-    { "src": "api/diagnostics.js", "use": "@vercel/node" },
-    { "src": "api/index.js", "use": "@vercel/node" },
-    { "src": "api/hashtag-rotator-service.js", "use": "@vercel/node" }
+    { "src": "api/**/*.js", "use": "@vercel/node" }
   ],
   "crons": [
     {
-      "path": "/api/cron",
-      "schedule": "0 10 * * *"
+      "path": "/api/cron/rotate-fallbacks",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/update-diagnostics",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/sync-metadata",
+      "schedule": "0 0 * * *"
     }
   ],
   "rewrites": [
