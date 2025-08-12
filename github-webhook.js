@@ -3,18 +3,18 @@ import crypto from 'crypto';
 const SECRET = process.env.GITHUB_WEBHOOK_SECRET;
 
 export default async function handler(req, res) {
-	if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
-	const signature = req.headers['x-hub-signature-256'];
-	const payload = JSON.stringify(req.body);
-	const hmac = crypto.createHmac('sha256', SECRET).update(payload).digest('hex');
-	const expected = `sha256=${hmac}`;
-	const verified = crypto.timingSafeEqual(Buffer.from(signature || ''), Buffer.from(expected));
+  const signature = req.headers['x-hub-signature-256'];
+  const payload = JSON.stringify(req.body);
+  const hmac = crypto.createHmac('sha256', SECRET).update(payload).digest('hex');
+  const expected = `sha256=${hmac}`;
+  const verified = crypto.timingSafeEqual(Buffer.from(signature || ''), Buffer.from(expected));
 
-	if (!verified) return res.status(401).send('Invalid signature');
+  if (!verified) return res.status(401).send('Invalid signature');
 
-	console.log(`[${new Date().toISOString()}] ${req.headers['x-github-event']}`);
-	console.log(payload);
+  console.log(`[${new Date().toISOString()}] ${req.headers['x-github-event']}`);
+  console.log(payload);
 
-	res.status(200).send('Webhook received 👌');
+  res.status(200).send('Webhook received 👌');
 }
