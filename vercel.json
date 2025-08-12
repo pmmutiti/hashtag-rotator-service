@@ -1,21 +1,38 @@
 {
-  "version": 2,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "builds": [
+    { "src": "api/cron.js", "use": "@vercel/node" },
+    { "src": "api/trends.js", "use": "@vercel/node" },
+    { "src": "api/github-webhook.js", "use": "@vercel/node" },
+    { "src": "api/diagnostics.js", "use": "@vercel/node" },
+    { "src": "api/index.js", "use": "@vercel/node" },
+    { "src": "api/hashtag-rotator-service.js", "use": "@vercel/node" }
+  ],
   "crons": [
     {
-      "path": "/api/cron/rotate-fallbacks",
-      "schedule": "*/15 * * * *"
+      "path": "/api/cron",
+      "schedule": "0 10 * * *"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/kenya-trends",
+      "has": [
+        {
+          "type": "header",
+          "key": "x-vercel-ip-country",
+          "value": "KE"
+        }
+      ],
+      "destination": "/api/trends?region=kenya"
     },
     {
-      "path": "/api/cron/update-diagnostics",
-      "schedule": "0 * * * *"
+      "source": "/kenya-trends",
+      "destination": "/api/trends?region=global"
     },
     {
-      "path": "/api/cron/sync-metadata",
-      "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/cron/auto-region-rotator",
-      "schedule": "*/30 * * * *"
+      "source": "/trends/:region",
+      "destination": "/api/trends?region=:region"
     }
   ]
 }
