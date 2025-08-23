@@ -1,1 +1,37 @@
+name: Update Kenya Hashtags
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  update-tags:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Fetch live hashtags
+        run: |
+          curl -s https://trends24.in/kenya/ | \
+          grep -oP '(?<=<a href="/topics/)[^"]+' | \
+          sed 's/^/#/' | head -n 10 > tags.txt
+
+      - name: Build kenya.json
+        run: |
+          echo '{' > data/kenya.json
+          echo '  "region": "kenya",' >> data/kenya.json
+          echo '  "tags": [' >> data/kenya.json
+          sed 's/^/    "/;s/$/",/' tags.txt >> data/kenya.json
+          echo '  ]' >> data/kenya.json
+          echo '}' >> data/kenya.json
+
+      - name: Commit and push
+        run: |
+          git config --global user.name "CivicBot"
+          git config --global user.email "civicbot@users.noreply.github.com"
+          git add data/kenya.json
+          git commit -m "Auto-update Kenya hashtags"
+          git push
 
