@@ -1,4 +1,4 @@
-# Ignore system files and local dev artifacts
+# 🧹 System files and local dev artifacts
 .DS_Store
 Thumbs.db
 node_modules/
@@ -6,14 +6,14 @@ node_modules/
 .env.local
 .env.*.local
 
-# Ignore build outputs (handled by Vercel)
+# 🏗️ Build outputs (handled by Vercel)
 dist/
 build/
 .cache/
 .next/
 out/
 
-# Ignore test files and coverage
+# 🧪 Test files and coverage
 __tests__/
 coverage/
 *.test.js
@@ -21,20 +21,26 @@ coverage/
 *.test.ts
 *.spec.ts
 
-# Ignore editor and tooling configs
+# 🛠️ Editor and tooling configs
 .vscode/
 .idea/
 *.log
 
-# Ignore remixable docs or drafts not meant for deployment
+# 📝 Drafts and remixable docs (not for civic deployment)
 drafts/
 notes/
 *.md
 *.txt
 
-# Ignore local assets not needed in production
+# 🎨 Local assets not needed in production
 assets/raw/
 assets/mock/
 *.psd
 *.sketch
 *.xcf
+
+# 🚫 Civic rot artifacts (manual overrides, ghost configs)
+fallback-rotator.json
+trends24.json
+server.js
+webhook-diagnostics.json
