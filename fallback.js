@@ -1,3 +1,11 @@
-export function getFallbackHashtags() {
-  return ['#KenyaUpdates', '#CivicPulse', '#PublicWatch'];
-}
+const hashtags = [
+  "#JusticeforJuliaNjoki",
+  "#ShootFirstSir",
+  "#WeAreAllKikuyus",
+  "#BaddiesMidwest",
+  "#Election2025",
+  "#BritishGP",
+  "#BuildOverride",
+  "#vercelConfig",
+  "#DashboardSilence"
+];
