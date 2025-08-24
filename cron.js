@@ -1,6 +1,3 @@
-import { writeFile } from 'fs/promises';
-import path from 'path';
-
 export default async function handler(req, res) {
   const timestamp = new Date().toISOString();
   const regions = [
@@ -9,7 +6,6 @@ export default async function handler(req, res) {
     "netherlands", "india", "japan", "israel"
   ];
 
-  // Fallback hashtags per region
   const fallbackMap = {
     kenya: ["#JusticeKE", "#OpenNairobi", "#NairobiWatch"],
     nigeria: ["#NaijaTech", "#EndSARS", "#CivicNaija"],
@@ -25,32 +21,24 @@ export default async function handler(req, res) {
     israel: ["#CyberPolicyIL", "#TelAvivProtests", "#OpenIsrael"]
   };
 
-  // Rotate one hashtag per region
   const rotated = {};
   for (const region of regions) {
-    const tags = fallbackMap[region] || [];
-    const index = Math.floor(Math.random() * tags.length);
-    rotated[region] = tags[index] || "#CivicGlobal";
+    const tags = fallbackMap[region];
+    rotated[region] = tags?.[Math.floor(Math.random() * tags.length)] || "#CivicGlobal";
   }
 
-  // Sync metadata to public cache
-  const metadata = {
+  const payload = {
     rotatedAt: timestamp,
-    regions,
     hashtags: rotated,
     diagnostics: {
       status: "✅ Rotation complete",
       totalRegions: regions.length,
-      timestamp
+      timestamp,
+      fallbackUsed: true,
+      source: "fallbackMap"
     }
   };
 
-  const filePath = path.join(process.cwd(), 'public', 'fallback-rotator.json');
-  await writeFile(filePath, JSON.stringify(metadata, null, 2));
-
-  res.status(200).json({
-    status: "✅ Cron executed",
-    rotated,
-    diagnostics: metadata.diagnostics
-  });
+  // Instead of writing to disk, return JSON for webhook or dashboard fetch
+  res.status(200).json(payload);
 }
