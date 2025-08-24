@@ -1,31 +1,61 @@
-import fetch from 'node-fetch';
-import fs from 'fs';
-import path from 'path';
+import axios from 'axios';
 import cheerio from 'cheerio';
 
-export default async function handler(req, res) {
-  const url = 'https://trends24.in/kenya/';
-  try {
-    const response = await fetch(url);
-    const html = await response.text();
-    const $ = cheerio.load(html);
+const sources = {
+  kenya: 'https://trends24.in/kenya/',
+  usa: 'https://trends24.in/united-states/',
+  uk: 'https://trends24.in/united-kingdom/',
+  nigeria: 'https://trends24.in/nigeria/',
+  india: 'https://trends24.in/india/'
+};
 
+export default async function handler(req, res) {
+  const region = req.query.region?.toLowerCase() || 'kenya';
+  const url = sources[region];
+
+  try {
+    if (!url) throw new Error(`Unsupported region: ${region}`);
+
+    const { data: html } = await axios.get(url);
+    const $ = cheerio.load(html);
     const hashtags = [];
-    $('.trend-card li a').each((_, el) => {
+
+    $('.trend-card__list li a').each((_, el) => {
       const tag = $(el).text().trim();
       if (tag.startsWith('#')) hashtags.push(tag);
     });
 
-    const payload = {
+    if (hashtags.length === 0) throw new Error('No hashtags found. Site structure may have changed.');
+
+    res.status(200).json({
+      status: '✅ Scrape successful',
+      region,
+      source: url,
+      hashtags: hashtags.slice(0, 10),
       updated: new Date().toISOString(),
-      hashtags: { kenya: hashtags }
-    };
-
-    const filePath = path.resolve('./public', 'trends24.json');
-    fs.writeFileSync(filePath, JSON.stringify(payload, null, 2));
-
-    res.status(200).json({ status: 'Scrape successful', count: hashtags.length });
+      fallbackUsed: false
+    });
   } catch (err) {
-    res.status(500).json({ error: 'Scrape failed', details: err.message });
+    console.error('❌ Scrape failed:', err.message);
+    res.status(500).json({
+      status: '❌ Scrape failed',
+      region,
+      source: url || 'unknown',
+      hashtags: getFallback(region),
+      updated: new Date().toISOString(),
+      fallbackUsed: true,
+      error: err.message
+    });
   }
+}
+
+function getFallback(region) {
+  const fallback = {
+    kenya: ['#OccupyCBDTuesday', '#WeAreAllKikuyus', '#JusticeforJuliaNjoki'],
+    usa: ['#BaddiesMidwest', '#Election2025'],
+    uk: ['#BritishGP', '#LondonProtests'],
+    nigeria: ['#EndSARS', '#NaijaTech'],
+    india: ['#DigitalIndia', '#RightToInternet']
+  };
+  return fallback[region] || ['#BuildOverride', '#DashboardSilence'];
 }
