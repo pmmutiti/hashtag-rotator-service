@@ -4,5 +4,9 @@
   "delivery": "6e3b4ef0-77b2-11f0-9dcd-b6322795bf63",
   "timestamp": "2025-08-13T12:00:00.000Z",
   "repository": "pmmutiti/hashtag-rotator-service",
-  "sender": "vercel[bot]"
+  "sender": "vercel[bot]",
+  "verified": true,
+  "fallbackUsed": false,
+  "source": "webhook-listener.js",
+  "region": "KE"
 }
