@@ -1,14 +1,30 @@
 {
-  "rotatedAt": "2025-08-12T06:32:00.000Z",
-  "regions": ["kenya", "nigeria", "ghana", ...],
+  "rotatedAt": "2025-08-24T15:50:00.000Z",
+  "regions": [
+    "kenya", "nigeria", "ghana", "southafrica",
+    "usa", "uk", "canada", "france",
+    "netherlands", "india", "japan", "israel"
+  ],
   "hashtags": {
-    "kenya": "#OpenNairobi",
+    "kenya": "#OccupyCBDTuesday",
     "nigeria": "#EndSARS",
-    ...
+    "ghana": "#OpenGhana",
+    "southafrica": "#YouthVoteSA",
+    "usa": "#Election2025",
+    "uk": "#BritishGP",
+    "canada": "#OpenCanada",
+    "france": "#JusticeFrance",
+    "netherlands": "#OpenDataNL",
+    "india": "#DigitalIndia",
+    "japan": "#TokyoPulse",
+    "israel": "#OpenIsrael"
   },
   "diagnostics": {
     "status": "✅ Rotation complete",
     "totalRegions": 12,
-    "timestamp": "2025-08-12T06:32:00.000Z"
+    "timestamp": "2025-08-24T15:50:00.000Z",
+    "fallbackUsed": true,
+    "source": "fallbackMap",
+    "verified": false
   }
 }
