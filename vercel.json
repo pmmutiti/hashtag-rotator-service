@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
   "builds": [
     { "src": "api/cron.js", "use": "@vercel/node" },
     { "src": "api/trends.js", "use": "@vercel/node" },
@@ -28,11 +29,22 @@
     },
     {
       "source": "/kenya-trends",
+      "missing": [
+        {
+          "type": "header",
+          "key": "x-vercel-ip-country",
+          "value": "KE"
+        }
+      ],
       "destination": "/api/trends?region=global"
     },
     {
       "source": "/trends/:region",
       "destination": "/api/trends?region=:region"
+    },
+    {
+      "source": "/",
+      "destination": "/api/index"
     }
   ]
 }
