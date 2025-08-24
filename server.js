@@ -1,51 +1,15 @@
-// server.js
-import http from 'http';
-import fs from 'fs';
-import path from 'path';
-import url from 'url';
+import express from 'express';
+import scrapeTrends24 from './api/scrape-trends24.js';
+import rotator from './api/rotator.js';
+import diagnostics from './api/diagnostics.js';
 
-const PORT = process.env.PORT || 3000;
+const app = express();
+app.use(express.json());
 
-const server = http.createServer((req, res) => {
-  const parsedUrl = url.parse(req.url, true);
-  const route = parsedUrl.pathname;
+app.get('/api/scrape-trends24', scrapeTrends24);
+app.get('/api/rotator', rotator);
+app.get('/api/diagnostics', diagnostics);
 
-  if (route === '/api/trends24-cache') {
-    const filePath = path.join(__dirname, 'public', 'trends24.json');
-    try {
-      const data = fs.readFileSync(filePath, 'utf-8');
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(data);
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Cache not found', details: err.message }));
-    }
-  }
-
-  else if (route === '/api/rotator') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({
-      status: '✅ Rotator refreshed',
-      rotatedAt: new Date().toISOString()
-    }));
-  }
-
-  else if (route === '/api/diagnostics') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({
-      status: '✅ Diagnostics OK',
-      timestamp: new Date().toISOString(),
-      regions: ['kenya', 'global'],
-      fallbackActive: true
-    }));
-  }
-
-  else {
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Not Found' }));
-  }
-});
-
-server.listen(PORT, () => {
-  console.log(`🚀 Node.js civic rotator running on http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log('🧪 Local civic API running on http://localhost:3000');
 });
