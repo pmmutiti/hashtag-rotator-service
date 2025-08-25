@@ -4,7 +4,9 @@ import cheerio from 'cheerio';
 const sources = {
   kenya: 'https://trends.cyberkendra.com/kenya/',
   usa: 'https://trends.cyberkendra.com/united-states/',
-  uk: 'https://trends.cyberkendra.com/united-kingdom/'
+  uk: 'https://trends.cyberkendra.com/united-kingdom/',
+  nigeria: 'https://trends.cyberkendra.com/nigeria/',
+  india: 'https://trends.cyberkendra.com/india/'
 };
 
 export default async function handler(req, res) {
@@ -18,7 +20,7 @@ export default async function handler(req, res) {
     const $ = cheerio.load(html);
     const hashtags = [];
 
-    $('ol.trend-card__list li a').each((i, el) => {
+    $('.trend-card li a').each((i, el) => {
       const tag = $(el).text().trim();
       if (tag.startsWith('#')) hashtags.push(tag);
     });
@@ -46,9 +48,11 @@ export default async function handler(req, res) {
 
 function getFallbackHashtags(region) {
   const fallback = {
-    kenya: ['#JusticeforJuliaNjoki', '#ShootFirstSir'],
-    usa: ['#BaddiesMidwest', '#Election2025'],
-    uk: ['#BritishGP', '#LondonProtests']
+    kenya: ['#JusticeforJuliaNjoki', '#OccupyCBDTuesday', '#WeAreAllKikuyus'],
+    usa: ['#BaddiesMidwest', '#Election2025', '#IndictmentWatch'],
+    uk: ['#BritishGP', '#LondonProtests', '#NHSStrike'],
+    nigeria: ['#EndSARS', '#NaijaVotes', '#LagosFloods'],
+    india: ['#DigitalIndia', '#BharatBandh', '#Chandrayaan3']
   };
   return fallback[region] || ['#BuildOverride', '#DashboardSilence'];
 }
