@@ -154,4 +154,57 @@ const hashtags = data.hashtags || [];</code></pre>
     </tbody>
   </table>
 
-  <h2>🧾 License</h
+    <h2>🧾 License</h2>
+  <p>This project is licensed under the MIT License — built for civic clarity, not corporate opacity. You are free to use, modify, and distribute this codebase for public benefit, provided attribution is maintained and no fallback logic is reintroduced.</p>
+
+  <h2>📣 Contributing</h2>
+  <p>Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. All contributions must comply with audit-ready standards and avoid phantom endpoints or placeholder logic.</p>
+
+  <h2>📊 Observability & Monitoring</h2>
+  <ul>
+    <li>✅ All endpoints are wired to live data sources</li>
+    <li>📡 No fallback logic or phantom modules permitted</li>
+    <li>🧪 Diagnostics panel logs timestamp, region, and signal integrity</li>
+    <li>📈 Webhook listeners trigger real-time updates across dashboards</li>
+    <li>🔍 Vercel logs and commit hashes trace every deployment</li>
+  </ul>
+
+  <h2>📦 API Reference</h2>
+  <table>
+    <thead>
+      <tr><th>Endpoint</th><th>Description</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>/api/hashtag-rotator</code></td>
+        <td>Returns verified civic hashtags for a given region</td>
+        <td><code>/api/hashtag-rotator?region=kenya</code></td>
+      </tr>
+      <tr>
+        <td><code>/api/diagnostics</code></td>
+        <td>Returns system health, fallback status, and supported regions</td>
+        <td><code>/api/diagnostics</code></td>
+      </tr>
+      <tr>
+        <td><code>/api/scrape-trends24</code></td>
+        <td>Scrapes live hashtags from Trends24 for caching</td>
+        <td><code>/api/scrape-trends24?region=kenya</code></td>
+      </tr>
+      <tr>
+        <td><code>/api/webhook-listener</code></td>
+        <td>Receives external civic signals and updates dashboard</td>
+        <td><code>/api/webhook-listener</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>🧠 Author</h2>
+  <p><strong>Peter M. Mutiti</strong><br/>
+  Civic watchdog, dashboard architect, rotator reformer.<br/>
+  📍 Nairobi, Kenya<br/>
+  🛠️ <a href="https://hashtag-rotator-service-1u7ys9zy6-peter-m-mutitis-projects.vercel.app" target="_blank">View Live Service</a><br/>
+  💬 <a href="mailto:mutiti.publicinfra@protonmail.com">mutiti.publicinfra@protonmail.com</a></p>
+
+</body>
+</html>
+
