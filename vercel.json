@@ -18,8 +18,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "VERCEL_GIT_COMMIT_SHA": "@vercel/git-commit-sha"
-  }
+  ]
 }
