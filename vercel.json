@@ -2,7 +2,6 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "output": "standalone",
   "rewrites": [
     {
       "source": "/api/(.*)",
