@@ -1,4 +1,8 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json"
+}
+
+{
   "name": "hashtag-rotator-service",
   "version": "1.0.0",
   "description": "Civic hashtag rotator with diagnostics, webhook intake, and region-aware endpoints.",
