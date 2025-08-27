@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // Public access
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Public diagnostics
 
   const timestamp = new Date().toISOString();
   const commitHash = process.env.VERCEL_GIT_COMMIT_SHA || 'unknown';
@@ -12,9 +12,10 @@ export default async function handler(req, res) {
     `/api/rotator?region=${region}`
   ]).concat(['/api/crons']);
 
+  const base = req.headers.host.startsWith('localhost') ? 'http' : 'https';
+
   const results = await Promise.allSettled(
     endpoints.map(async (endpoint) => {
-      const base = req.headers.host.startsWith('localhost') ? 'http' : 'https';
       const url = `${base}://${req.headers.host}${endpoint}`;
       try {
         const response = await axios.get(url);
@@ -48,6 +49,7 @@ export default async function handler(req, res) {
     regionsSupported: regions,
     fallbackEnabled,
     endpoints: results.map(r => r.value || r.reason),
-    source: 'diagnostics.js'
+    source: 'diagnostics.js',
+    runtime: 'nodejs22.x'
   });
 }
