@@ -1,13 +1,24 @@
 {
   "name": "hashtag-rotator-service",
   "version": "1.0.0",
-  "main": "server.js",
+  "description": "Modular civic hashtag rotator with diagnostics, webhook intake, and region-aware endpoints.",
+  "main": "index.js",
   "scripts": {
-    "dev": "node server.js",
-    "build": "echo 'No build step required'",
-    "start": "node server.js"
+    "dev": "vercel dev",
+    "start": "node api/index.js"
   },
+  "keywords": [
+    "civic",
+    "rotator",
+    "vercel",
+    "serverless",
+    "audit-ready",
+    "cyber-kendra"
+  ],
+  "author": "Peter M. Mutiti",
+  "license": "MIT",
   "dependencies": {
-    // your actual dependencies here
-  }
+    "node-fetch": "^3.3.2"
+  },
+  "type": "module"
 }
