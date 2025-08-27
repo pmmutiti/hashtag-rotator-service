@@ -29,8 +29,6 @@ coverage/
 # 📝 Drafts and remixable docs (not for civic deployment)
 drafts/
 notes/
-*.md
-*.txt
 
 # 🎨 Local assets not needed in production
 assets/raw/
@@ -42,5 +40,3 @@ assets/mock/
 # 🚫 Civic rot artifacts (manual overrides, ghost configs)
 fallback-rotator.json
 trends24.json
-server.js
-webhook-diagnostics.json
