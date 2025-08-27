@@ -1,75 +1,26 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "version": 2,
-  "builds": [
-    { "src": "api/cron.js", "use": "@vercel/node" },
-    { "src": "api/trends.js", "use": "@vercel/node" },
-    { "src": "api/github-webhook.js", "use": "@vercel/node" },
-    { "src": "api/diagnostics.js", "use": "@vercel/node" },
-    { "src": "api/index.js", "use": "@vercel/node" },
-    { "src": "api/hashtag-rotator-service.js", "use": "@vercel/node" },
-    { "src": "api/hashtag-rotator.js", "use": "@vercel/node" }
-  ],
-  "crons": [
-    {
-      "path": "/api/cron",
-      "schedule": "0 10 * * *"
-    }
-  ],
+  "framework": null,
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "output": "standalone",
   "rewrites": [
     {
-      "source": "/kenya-trends",
-      "has": [
-        {
-          "type": "header",
-          "key": "x-vercel-ip-country",
-          "value": "KE"
-        }
-      ],
-      "destination": "/api/trends?region=kenya"
-    },
-    {
-      "source": "/kenya-trends",
-      "missing": [
-        {
-          "type": "header",
-          "key": "x-vercel-ip-country",
-          "value": "KE"
-        }
-      ],
-      "destination": "/api/trends?region=global"
-    },
-    {
-      "source": "/trends/:region",
-      "destination": "/api/trends?region=:region"
-    },
-    {
-      "source": "/",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/cyber-kendra",
-      "destination": "/api/index?source=CyberKendra"
-    },
-    {
-      "source": "/cyber-kendra/diagnostics",
-      "destination": "/api/diagnostics?source=CyberKendra"
-    },
-    {
-      "source": "/cyber-kendra/rotator",
-      "destination": "/api/hashtag-rotator?region=kenya&source=CyberKendra"
-    },
-    {
-      "source": "/cyber-kendra/cron",
-      "destination": "/api/cron?source=CyberKendra"
-    },
-    {
-      "source": "/cyber-kendra/github",
-      "destination": "/api/github-webhook?source=CyberKendra"
-    },
-    {
-      "source": "/cyber-kendra/trends",
-      "destination": "/api/trends?region=kenya&source=CyberKendra"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     }
-  ]
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "VERCEL_GIT_COMMIT_SHA": "@vercel/git-commit-sha"
+  }
 }
