@@ -1,58 +1,100 @@
-# 🌍 Hashtag Rotator Service
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📘 Civic README – Hashtag Rotator Service</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f9f9f9;
+      color: #222;
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    h1, h2 {
+      color: #005f73;
+    }
+    code {
+      background: #eee;
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+    }
+    .callout {
+      background: #e0f7fa;
+      border-left: 6px solid #00bcd4;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    ul {
+      padding-left: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌍 Hashtag Rotator Service</h1>
+  <p><strong>Author:</strong> Peter M. Mutiti<br />
+     <strong>Version:</strong> 1.0.0<br />
+     <strong>License:</strong> MIT</p>
 
-A public-facing, region-aware microservice that fetches live trending hashtags from verified sources and rotates them in civic dashboards. Built for transparency, diagnostics, and real-time civic engagement.
+  <div class="callout">
+    <strong>Purpose:</strong> This service rotates verified civic hashtags in real time, enabling public-facing dashboards, tweet CTAs, and region-aware diagnostics. It is designed to eliminate fallback logic, expose phantom endpoints, and empower citizen oversight.
+  </div>
 
----
+  <h2>📦 Project Structure</h2>
+  <ul>
+    <li><code>api/index.js</code> – Root civic entry point</li>
+    <li><code>api/hashtag-rotator.js</code> – Main rotator endpoint (region-aware)</li>
+    <li><code>api/hashtag-rotator-service.js</code> – Legacy or alternate rotator logic</li>
+    <li><code>api/diagnostics.js</code> – Endpoint health, fallback detection</li>
+    <li><code>api/trends.js</code> – Regional civic trend fetcher (e.g. CyberKendra)</li>
+    <li><code>api/github-webhook.js</code> – GitHub payload intake for civic module updates</li>
+    <li><code>api/cron.js</code> – Scheduled refresh logic (daily at 10:00)</li>
+    <li><code>vercel.json</code> – Deployment config: rewrites, builds, cron jobs</li>
+    <li><code>package.json</code> – Dependencies and scripts</li>
+    <li><code>.vercelignore</code> – Excludes phantom files from deploy</li>
+  </ul>
 
-## 🚀 Live Deployment
+  <h2>🚀 Endpoints</h2>
+  <ul>
+    <li><code>/api/hashtag-rotator?region=kenya</code> – Fetch civic hashtags</li>
+    <li><code>/api/diagnostics</code> – Check endpoint health</li>
+    <li><code>/api/trends?region=kenya</code> – Regional civic trends</li>
+    <li><code>/api/github-webhook</code> – GitHub webhook intake</li>
+    <li><code>/api/cron</code> – Manual cron trigger</li>
+    <li><code>/cyber-kendra/*</code> – Routed civic probes (via vercel.json)</li>
+  </ul>
 
-🔗 [Production URL](https://hashtag-rotator-service-1u7ys9zy6-peter-m-mutitis-projects.vercel.app)
+  <h2>🧠 Cyber Kendra Integration</h2>
+  <p>Cyber Kendra routes are wired to hit every civic module with <code>source=CyberKendra</code> for traceability. These include:</p>
+  <ul>
+    <li><code>/cyber-kendra</code> → Index</li>
+    <li><code>/cyber-kendra/rotator</code> → Hashtag rotator</li>
+    <li><code>/cyber-kendra/diagnostics</code> → Diagnostics</li>
+    <li><code>/cyber-kendra/trends</code> → Trends</li>
+    <li><code>/cyber-kendra/github</code> → Webhook</li>
+    <li><code>/cyber-kendra/cron</code> → Cron trigger</li>
+  </ul>
 
----
+  <h2>🧪 Diagnostics & Observability</h2>
+  <p>All endpoints return timestamped responses and support fallback detection. The diagnostics module can be extended to log uptime, commit hashes, and civic signal integrity.</p>
 
-## 🧱 Modules Deployed
+  <h2>📜 Deployment Notes</h2>
+  <ul>
+    <li>Ensure <code>package.json</code> is valid JSON with no trailing commas</li>
+    <li>Use <code>vercel.json</code> to control builds and rewrites</li>
+    <li>Ignore phantom files via <code>.vercelignore</code></li>
+    <li>Deploy via Vercel CLI or GitHub integration</li>
+  </ul>
 
-| Module                   | Status        | Timestamp     | Commit ID               |
-|--------------------------|---------------|---------------|--------------------------|
-| `.gitignore`             | ✅ Deployed    | 2 hours ago   | `84284d29`              |
-| `fallbackHashtags.js`    | ✅ Deployed    | 14 hours ago  | `31b106dc`              |
-| `constants.js`           | ✅ Deployed    | 14 hours ago  | `3b46b570`              |
-| `diagnostics.js`         | ✅ Deployed    | 15 hours ago  | `92e809ed`              |
-| `rotator.js (Kenya)`     | ✅ Deployed    | 15 hours ago  | `209e1983`              |
-| `hashtag-rotator.js`     | ✅ Deployed    | Just now      | `civic-endpoint-verified` |
-| `script.js`              | ✅ Deployed    | 17 hours ago  | `517b6d79`              |
-| `index.html`             | ✅ Deployed    | 18 hours ago  | `38b7174f`              |
-| `server.js`              | ✅ Deployed    | 18 hours ago  | `f3fd893e`              |
-| `scrape-trends24.js`     | ✅ Deployed    | 18 hours ago  | `01cff475`              |
-| `webhook-diagnostics.js` | ✅ Deployed    | 19 hours ago  | `39e15623`              |
-| `webhook-listener.js`    | ✅ Deployed    | 19 hours ago  | `3423140f`              |
-| `cron.js`                | ✅ Deployed    | 20 hours ago  | `2eae4d5a`              |
-| `trends24-cache.js`      | ✅ Deployed    | 20 hours ago  | `4f78c1f3`              |
+  <h2>📣 Civic Philosophy</h2>
+  <blockquote>
+    “Activism isn’t just noise — it’s infrastructure.”<br />
+    This project turns trending hashtags into civic signals, empowering citizens to amplify verified, region-specific causes.
+  </blockquote>
 
----
-
-## 📡 Features
-
-- ✅ Live hashtag scraping from Trends24 and CyberKendra  
-- 🌐 Region toggles: Kenya, Nigeria, USA, UK, India  
-- 🧪 Diagnostics panel with fallback detection  
-- 🐦 Tweet CTA generator with civic messaging  
-- 📊 Rotator module with refresh intervals  
-- 🔁 Webhook listeners for real-time updates  
-- 🧾 Audit-ready fallback logic and timestamping  
-- 🧠 Canonical endpoint: `/api/hashtag-rotator`  
-- 🚫 Fallback logic disabled — verified civic signals only  
-
----
-
-## 🧠 How It Works
-
-```js
-// Fetch hashtags from live endpoint
-const res = await fetch('/api/hashtag-rotator?region=kenya');
-const data = await res.json();
-const hashtags = data.hashtags || [];
-
-
-
-
+  <p><strong>Maintainer:</strong> Peter M. Mutiti<br />
+     <strong>Contact:</strong> [Insert civic contact or GitHub link]</p>
+</body>
+</html>
