@@ -1,0 +1,36 @@
+name: Update Kenya Hashtags
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-kenya:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: ⚔️ Update Kenya hashtags
+        run: |
+          mkdir -p data
+          curl -s https://trends.cyberkendra.com/kenya/ | grep -oP '#\w+' | head -n 10 > data/kenya-hashtags.txt
+
+          echo '{
+            "region": "kenya",
+            "hashtags": ['$(cat data/kenya-hashtags.txt | sed 's/^/"/;s/$/",/' | tr '\n' ' ')'],
+            "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+          }' > data/kenya.json
+
+      - name: ✅ Commit and push kenya.json
+        run: |
+          git config --global user.name "CivicBot"
+          git config --global user.email "bot@civicinfra.ke"
+          git add data/kenya.json
+          git commit -m "Auto-update Kenya hashtags"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
