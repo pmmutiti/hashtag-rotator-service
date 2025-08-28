@@ -1,0 +1,47 @@
+name: Fetch Civic Hashtags for All Regions
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fetch-hashtags:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: ⚔️ Fetch and build region JSON files
+        run: |
+          mkdir -p data
+
+          declare -A urls
+          urls["kenya"]="https://trends.cyberkendra.com/kenya/"
+          urls["nigeria"]="https://trends.cyberkendra.com/nigeria/"
+          urls["ghana"]="https://trends.cyberkendra.com/ghana/"
+          urls["southafrica"]="https://trends.cyberkendra.com/southafrica/"
+          urls["usa"]="https://trends.cyberkendra.com/usa/"
+          urls["uk"]="https://trends.cyberkendra.com/uk/"
+          urls["india"]="https://trends.cyberkendra.com/india/"
+
+          for region in "${!urls[@]}"; do
+            echo "🔍 Fetching hashtags for $region"
+            curl -s "${urls[$region]}" | grep -oP '#\w+' | head -n 10 > data/$region-hashtags.txt
+
+            echo "🧱 Building data/$region.json"
+            echo '{
+              "region": "'$region'",
+              "hashtags": ['$(cat data/$region-hashtags.txt | sed 's/^/"/;s/$/",/' | tr '\n' ' ')'],
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }' > data/$region.json
+          done
+
+      - name: ✅ Commit civic JSON files
+        run: |
+          git config --global user.name "CivicBot"
+          git config --global user.email "bot@civicinfra.ke"
+          git add data/*.json
+          git commit -m "Auto-fetch civic hashtags for all regions"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
