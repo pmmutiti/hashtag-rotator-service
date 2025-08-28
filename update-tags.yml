@@ -1,0 +1,24 @@
+name: Update Tags
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  tagger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: ⚔️ Tag latest commit
+        run: |
+          git config --global user.name "CivicBot"
+          git config --global user.email "bot@civicinfra.ke"
+          git tag v1.2.3
+          git push origin v1.2.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
