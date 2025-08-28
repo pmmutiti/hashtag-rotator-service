@@ -12,11 +12,12 @@ export default async function handler(req, res) {
     `/api/rotator?region=${region}`
   ]).concat(['/api/crons']);
 
-  const base = req.headers.host.startsWith('localhost') ? 'http' : 'https';
+  const host = req.headers.host || process.env.VERCEL_URL || 'localhost';
+  const base = host.startsWith('localhost') ? 'http' : 'https';
 
   const results = await Promise.allSettled(
     endpoints.map(async (endpoint) => {
-      const url = `${base}://${req.headers.host}${endpoint}`;
+      const url = `${base}://${host}${endpoint}`;
       try {
         const response = await axios.get(url);
         const data = response.data;
@@ -25,13 +26,15 @@ export default async function handler(req, res) {
           status: '✅ Reachable',
           statusCode: response.status,
           fallbackUsed: data.fallbackUsed || false,
-          updated: data.updated || data.timestamp || null
+          updated: data.updated || data.timestamp || null,
+          source: 'diagnostics.js'
         };
       } catch (err) {
         return {
           endpoint,
           status: '❌ Unreachable',
-          error: err.message
+          error: err.message,
+          source: 'diagnostics.js'
         };
       }
     })
@@ -41,6 +44,15 @@ export default async function handler(req, res) {
     r.status === 'fulfilled' && r.value?.fallbackUsed
   );
 
+  const endpointsReport = results.map(r =>
+    r.status === 'fulfilled' ? r.value : {
+      endpoint: 'unknown',
+      status: '❌ Unreachable',
+      error: r.reason?.message || 'Unknown error',
+      source: 'diagnostics.js'
+    }
+  );
+
   res.status(200).json({
     status: '🧪 Diagnostics OK',
     deployed: true,
@@ -48,8 +60,7 @@ export default async function handler(req, res) {
     commitHash,
     regionsSupported: regions,
     fallbackEnabled,
-    endpoints: results.map(r => r.value || r.reason),
-    source: 'diagnostics.js',
+    endpoints: endpointsReport,
     runtime: 'nodejs22.x'
   });
 }
