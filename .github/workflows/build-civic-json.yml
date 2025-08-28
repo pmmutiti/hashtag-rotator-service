@@ -1,1 +1,43 @@
+name: Build Civic JSON Files
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Generate civic JSON files
+        run: |
+          mkdir -p data
+          declare -A hashtags
+          hashtags["kenya"]='["#AuditTheGhostProjects","#FertilizerScamWatch","#CivicSignalKE","#PublicFundsTracker"]'
+          hashtags["nigeria"]='["#TrackTheScamsNG","#CivicSignalNigeria","#GhostProjectsAlert","#BudgetWatchNG"]'
+          hashtags["ghana"]='["#CivicSignalGH","#AuditTheFundsGH","#GhostProjectsGhana","#PublicSpendWatchGH"]'
+          hashtags["southafrica"]='["#CivicSignalSA","#AuditTheContractsSA","#GhostProjectsSA","#BudgetWatchSA"]'
+          hashtags["usa"]='["#InfrastructureWatch","#CivicOversightUSA","#BudgetTransparency","#NoMorePhantomSpending"]'
+          hashtags["uk"]='["#AuditTheCouncil","#CivicSignalUK","#PublicFundsWatch","#NoGhostContracts"]'
+          hashtags["india"]='["#AuditYojana","#CivicSignalIndia","#PublicFundsIndia","#NoGhostSchemes"]'
+
+          for region in "${!hashtags[@]}"; do
+            echo "Generating $region.json"
+            echo "{
+              \"region\": \"$region\",
+              \"hashtags\": ${hashtags[$region]},
+              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+            }" > data/$region.json
+          done
+
+      - name: Commit civic JSON files
+        run: |
+          git config --global user.name "CivicBot"
+          git config --global user.email "bot@civicinfra.ke"
+          git add data/*.json
+          git commit -m "Auto-generate civic JSON files"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
