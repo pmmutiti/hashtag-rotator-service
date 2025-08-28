@@ -1,0 +1,47 @@
+name: Fetch and Log Kenya Civic Hashtags
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fetch-kenya:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: ⚔️ Fetch live hashtags and build kenya.json
+        run: |
+          mkdir -p data
+
+          # Scrape hashtags from CyberKendra Kenya
+          curl -s https://trends.cyberkendra.com/kenya/ | grep -oP '#\w+' | head -n 10 > data/kenya-hashtags.txt
+
+          # Format into JSON
+          echo '{
+            "region": "kenya",
+            "hashtags": ['$(cat data/kenya-hashtags.txt | sed 's/^/"/;s/$/",/' | tr '\n' ' ')'],
+            "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+          }' > data/kenya.json
+
+      - name: ✅ Commit kenya.json
+        run: |
+          git config --global user.name "CivicBot"
+          git config --global user.email "bot@civicinfra.ke"
+          git add data/kenya.json
+          git commit -m "Auto-fetch live hashtags for Kenya"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🧠 Log to diagnostics
+        run: |
+          curl -X POST https://hashtag-rotator-service.vercel.app/api/diagnostics \
+            -H "Content-Type: application/json" \
+            -d '{
+              "region": "kenya",
+              "hashtag": "Checkout + Fetch",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'",
+              "source": "github-actions"
+            }'
