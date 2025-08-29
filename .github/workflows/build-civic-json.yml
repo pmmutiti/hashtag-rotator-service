@@ -1,43 +1,51 @@
 name: Build Civic JSON Files
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: ✅ Checkout repository
         uses: actions/checkout@v3
 
-      - name: Generate civic JSON files
+      - name: ⚔️ Generate civic JSON files
         run: |
           mkdir -p data
-          declare -A hashtags
-          hashtags["kenya"]='["#AuditTheGhostProjects","#FertilizerScamWatch","#CivicSignalKE","#PublicFundsTracker"]'
-          hashtags["nigeria"]='["#TrackTheScamsNG","#CivicSignalNigeria","#GhostProjectsAlert","#BudgetWatchNG"]'
-          hashtags["ghana"]='["#CivicSignalGH","#AuditTheFundsGH","#GhostProjectsGhana","#PublicSpendWatchGH"]'
-          hashtags["southafrica"]='["#CivicSignalSA","#AuditTheContractsSA","#GhostProjectsSA","#BudgetWatchSA"]'
-          hashtags["usa"]='["#InfrastructureWatch","#CivicOversightUSA","#BudgetTransparency","#NoMorePhantomSpending"]'
-          hashtags["uk"]='["#AuditTheCouncil","#CivicSignalUK","#PublicFundsWatch","#NoGhostContracts"]'
-          hashtags["india"]='["#AuditYojana","#CivicSignalIndia","#PublicFundsIndia","#NoGhostSchemes"]'
+          declare -A urls
+          urls["kenya"]="https://trends.cyberkendra.com/kenya/"
+          urls["nigeria"]="https://trends.cyberkendra.com/nigeria/"
+          urls["ghana"]="https://trends.cyberkendra.com/ghana/"
+          urls["southafrica"]="https://trends.cyberkendra.com/southafrica/"
+          urls["usa"]="https://trends.cyberkendra.com/usa/"
+          urls["uk"]="https://trends.cyberkendra.com/uk/"
+          urls["india"]="https://trends.cyberkendra.com/india/"
 
-          for region in "${!hashtags[@]}"; do
-            echo "Generating $region.json"
-            echo "{
-              \"region\": \"$region\",
-              \"hashtags\": ${hashtags[$region]},
-              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
-            }" > data/$region.json
+          for region in "${!urls[@]}"; do
+            echo "🔍 Fetching hashtags for $region"
+            curl -s "${urls[$region]}" | grep -oP '#\w+' | head -n 10 > data/$region-hashtags.txt
+
+            echo "🧱 Building data/$region.json"
+            echo '{
+              "region": "'$region'",
+              "hashtags": ['$(cat data/$region-hashtags.txt | sed 's/^/"/;s/$/",/' | tr '\n' ' ')'],
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }' > data/$region.json
           done
 
-      - name: Commit civic JSON files
+      - name: ✅ Commit civic JSON files
         run: |
           git config --global user.name "CivicBot"
           git config --global user.email "bot@civicinfra.ke"
           git add data/*.json
-          git commit -m "Auto-generate civic JSON files"
+          git commit -m "Auto-build civic JSON files"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
