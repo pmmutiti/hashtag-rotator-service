@@ -9,17 +9,18 @@ jobs:
   update-tags:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: ✅ Checkout repo
         uses: actions/checkout@v3
 
-      - name: Fetch live hashtags
+      - name: ⚔️ Fetch live hashtags
         run: |
           curl -s https://trends24.in/kenya/ | \
           grep -oP '(?<=<a href="/topics/)[^"]+' | \
           sed 's/^/#/' | head -n 10 > tags.txt
 
-      - name: Build kenya.json
+      - name: 🧠 Build kenya.json
         run: |
+          mkdir -p data
           echo '{' > data/kenya.json
           echo '  "region": "kenya",' >> data/kenya.json
           echo '  "tags": [' >> data/kenya.json
@@ -27,11 +28,10 @@ jobs:
           echo '  ]' >> data/kenya.json
           echo '}' >> data/kenya.json
 
-      - name: Commit and push
+      - name: ✅ Commit and push
         run: |
           git config --global user.name "CivicBot"
           git config --global user.email "civicbot@users.noreply.github.com"
-          git add data/kenya.json
+          git add data/kenya.json tags.txt
           git commit -m "Auto-update Kenya hashtags"
           git push
-
