@@ -25,12 +25,12 @@ jobs:
             "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
           }' > data/kenya.json
 
-      - name: ✅ Commit and push kenya.json
-        run: |
-          git config --global user.name "CivicBot"
-          git config --global user.email "bot@civicinfra.ke"
-          git add data/kenya.json
-          git commit -m "Auto-update Kenya hashtags"
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: ✅ Commit and push kenya.json and hashtags.txt
+  run: |
+    git config --global user.name "CivicBot"
+    git config --global user.email "bot@civicinfra.ke"
+    git add data/kenya.json data/kenya-hashtags.txt
+    git commit -m "Auto-update Kenya hashtags"
+    git push origin main
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
