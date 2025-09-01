@@ -32,6 +32,7 @@ jobs:
         run: |
           git config --global user.name "CivicBot"
           git config --global user.email "civicbot@users.noreply.github.com"
-          git add data/kenya.json tags.txt
+          git add data/kenya.json tags.txt || true
+          git diff --cached --quiet && echo "🧠 Nothing to commit. Civic signal unchanged." && exit 0
           git commit -m "Auto-update Kenya hashtags"
           git push
