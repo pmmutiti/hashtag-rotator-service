@@ -1,61 +1,71 @@
-// build.js
 import fs from 'fs';
-import https from 'https';
+import path from 'path';
+import axios from 'axios';
+import cheerio from 'cheerio';
 
-// 🔗 Source URL for Kenya trends
-const TRENDS_URL = 'https://trends24.in/kenya/';
+const sources = {
+  kenya: 'https://trends24.in/kenya/',
+  usa: 'https://trends24.in/united-states/',
+  uk: 'https://trends24.in/united-kingdom/',
+  nigeria: 'https://trends24.in/nigeria/',
+  india: 'https://trends24.in/india/'
+};
 
-// 🧠 Fetch HTML from trends24.in
-function fetchTrends(url) {
-  return new Promise((resolve, reject) => {
-    https.get(url, res => {
-      let data = '';
-      res.on('data', chunk => (data += chunk));
-      res.on('end', () => resolve(data));
-    }).on('error', reject);
-  });
-}
+const fallback = {
+  kenya: ['#OccupyCBDTuesday', '#WeAreAllKikuyus', '#JusticeForJuliaNjoki'],
+  usa: ['#BaddiesMidwest', '#Election2025'],
+  uk: ['#BritishGP', '#LondonProtests'],
+  nigeria: ['#EndSARS', '#NaijaTech'],
+  india: ['#DigitalIndia', '#RightToInternet']
+};
 
-// 🧠 Extract hashtags using regex
-function extractHashtags(html) {
-  const matches = [...html.matchAll(/<a href="\/topics\/[^"]+">#([^<]+)<\/a>/g)];
-  return matches.slice(0, 10).map(m => `#${m[1]}`);
-}
+async function scrape(region) {
+  const url = sources[region];
+  if (!url) return { region, hashtags: fallback[region] || [], fallbackUsed: true };
 
-// 🧠 Write hashtags to tags.txt
-function writeTagsFile(tags) {
-  fs.writeFileSync('tags.txt', tags.join('\n'), 'utf8');
-}
-
-// 🧠 Build kenya.json
-function buildKenyaJson(tags) {
-  const json = {
-    region: 'kenya',
-    tags,
-    timestamp: new Date().toISOString()
-  };
-  fs.mkdirSync('data', { recursive: true });
-  fs.writeFileSync('data/kenya.json', JSON.stringify(json, null, 2), 'utf8');
-}
-
-// 🧠 Copy files to public/ for Vercel
-function copyToPublic() {
-  fs.mkdirSync('public', { recursive: true });
-  fs.copyFileSync('data/kenya.json', 'public/kenya.json');
-  fs.copyFileSync('tags.txt', 'public/tags.txt');
-}
-
-// 🧠 Main build routine
-(async () => {
   try {
-    const html = await fetchTrends(TRENDS_URL);
-    const tags = extractHashtags(html);
-    writeTagsFile(tags);
-    buildKenyaJson(tags);
-    copyToPublic();
-    console.log('✅ Civic build complete. Assets ready in /public');
+    const { data: html } = await axios.get(url);
+    const $ = cheerio.load(html);
+    const hashtags = [];
+
+    $('.trend-card__list li a').each((_, el) => {
+      const tag = $(el).text().trim();
+      if (tag.startsWith('#')) hashtags.push(tag);
+    });
+
+    if (hashtags.length === 0) throw new Error('No hashtags found');
+
+    return {
+      region,
+      hashtags: hashtags.slice(0, 10),
+      fallbackUsed: false
+    };
   } catch (err) {
-    console.error('❌ Build failed:', err.message);
-    process.exit(1);
+    console.warn(`⚠️ Scrape failed for ${region}: ${err.message}`);
+    return {
+      region,
+      hashtags: fallback[region] || [],
+      fallbackUsed: true
+    };
   }
+}
+
+(async () => {
+  const timestamp = new Date().toISOString();
+  const output = {};
+
+  for (const region of Object.keys(sources)) {
+    const result = await scrape(region);
+    output[region] = {
+      ...result,
+      updated: timestamp,
+      source: sources[region]
+    };
+  }
+
+  const filePath = path.join(process.cwd(), 'data', 'hashtags.json');
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify(output, null, 2));
+
+  console.log(`✅ Civic hashtags built at ${filePath}`);
 })();
