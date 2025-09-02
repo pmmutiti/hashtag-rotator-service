@@ -1,0 +1,11 @@
+# tags.txt — fallback civic hashtags
+# Updated: 2025-09-03T02:28:00+03:00
+
+#KenyaHashtags
+#Ngong
+#SabaSaba2025
+#JusticeForJuliaNjoki
+#OccupyCBDTuesday
+#WeAreAllKikuyus
+#BuildOverride
+#DashboardSilence
