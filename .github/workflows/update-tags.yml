@@ -1,4 +1,4 @@
-name: Update Tags
+yname: Update Tags
 
 on:
   workflow_dispatch:
