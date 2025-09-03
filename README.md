@@ -1,133 +1,90 @@
-
 <body>
+
   <h1>🌀 Hashtag Rotator Service</h1>
-  <p>Modular, audit-grade civic hashtag rotator with diagnostics, webhook intake, and region-aware endpoints. Built for public-facing dashboards, timestamped observability, and clean Vercel deployment.</p>
+  <p>A civic-grade, region-aware hashtag rotator built for transparency, remixability, and public observability. Powered by serverless endpoints, timestamped diagnostics, and Trends24 scraping.</p>
 
-  <h2>🚀 Features</h2>
-  <ul>
-    <li>✅ Fetches live hashtags from <a href="https://trends24.in/kenya/" target="_blank">trends24.in/kenya</a></li>
-    <li>✅ Builds <code>kenya.json</code> with region + timestamp</li>
-    <li>✅ Outputs <code>tags.txt</code> for diagnostics</li>
-    <li>✅ GitHub Actions workflow runs every 6 hours</li>
-    <li>✅ Vercel-compatible static deployment via <code>/public</code></li>
-    <li>✅ Serverless-ready with optional API endpoints</li>
-  </ul>
-
-  <h2>🧠 Project Structure</h2>
-  <pre><code>hashtag-rotator-service/
-├── build.js              # Civic build script (required for Vercel)
-├── package.json          # Includes build script and CLI logic
-├── public/               # Static deployable assets for Vercel
-│   └── kenya.json
-│   └── tags.txt
-├── data/                 # Raw civic output (used during build)
-│   └── kenya.json
-├── tags.txt              # Raw hashtag list
-├── .github/
-│   └── workflows/
-│       └── update-kenya-tags.yml
-</code></pre>
-
-  <h2>🛠️ Setup Instructions</h2>
-  <pre><code>git clone https://github.com/pmmutiti/hashtag-rotator-service.git
-cd hashtag-rotator-service
-npm install
-npm run build
-vercel dev
-vercel --prod
-</code></pre>
-
-  <h2>📦 package.json (Key Config)</h2>
-  <pre><code>{
-  "name": "hashtag-rotator-service",
-  "version": "1.0.0",
-  "description": "Modular civic hashtag rotator with diagnostics, webhook intake, and region-aware endpoints.",
-  "main": "index.js",
-  "scripts": {
-    "dev": "vercel dev",
-    "start": "node api/index.js",
-    "build": "node build.js && mkdir -p public && cp data/kenya.json public/ && cp tags.txt public/"
-  },
-  "keywords": [
-    "civic",
-    "rotator",
-    "vercel",
-    "serverless",
-    "audit-ready",
-    "cyber-kendra"
-  ],
-  "author": "Peter M. Mutiti",
-  "license": "MIT",
-  "dependencies": {
-    "node-fetch": "^3.3.2"
-  },
-  "type": "module"
-}
-</code></pre>
-
-  <h2>⚙️ GitHub Actions Workflow (Vercel-Safe)</h2>
-  <pre><code>name: Update Kenya Hashtags
-
-on:
-  schedule:
-    - cron: '0 */6 * * *'  # Every 6 hours
-  workflow_dispatch:
-
-jobs:
-  update-tags:
-    runs-on: ubuntu-latest
-    steps:
-      - name: ✅ Checkout repo
-        uses: actions/checkout@v3
-
-      - name: ⚔️ Fetch live hashtags
-        run: |
-          curl -s https://trends24.in/kenya/ | \
-          grep -oP '(?<=<a href="/topics/)[^"]+' | \
-          sed 's/^/#/' | head -n 10 > tags.txt
-
-      - name: 🧠 Build kenya.json
-        run: |
-          mkdir -p data
-          echo '{' > data/kenya.json
-          echo '  "region": "kenya",' >> data/kenya.json
-          echo '  "tags": [' >> data/kenya.json
-          sed 's/^/    "/;s/$/",/' tags.txt >> data/kenya.json
-          echo '  ]' >> data/kenya.json
-          echo '}' >> data/kenya.json
-
-      - name: ✅ Commit and push
-        run: |
-          git config --global user.name "CivicBot"
-          git config --global user.email "civicbot@users.noreply.github.com"
-          git add data/kenya.json tags.txt || true
-          git diff --cached --quiet && echo "🧠 Nothing to commit. Civic signal unchanged." && exit 0
-          git commit -m "Auto-update Kenya hashtags"
-          git push
-</code></pre>
-
-  <h2>📡 Vercel Deployment Notes</h2>
-  <ul>
-    <li>Vercel expects static assets in <code>/public</code></li>
-    <li>The <code>build.js</code> script ensures <code>kenya.json</code> and <code>tags.txt</code> are copied there</li>
-    <li>No <code>vercel.json</code> is required unless you want custom rewrites or API routing</li>
-    <li>Avoid defining <code>"builds"</code> in <code>vercel.json</code> unless using serverless functions</li>
-  </ul>
-
-  <h2>🧠 CivicBot Verification Checklist</h2>
-  <ul>
-    <li>✅ <code>build.js</code> exists at root</li>
-    <li>✅ <code>package.json</code> includes <code>"build"</code> script</li>
-    <li>✅ <code>public/</code> contains deployable assets</li>
-    <li>✅ GitHub Actions workflow does not interfere with Vercel</li>
-    <li>✅ No phantom folders, no fallback logic</li>
-  </ul>
-
-  <div class="callout">
-    ✅ Once deployed, your civic hashtag rotator will run cleanly every 6 hours, push audit-grade JSON, and serve static assets via Vercel—no rot, no fallback, no excuses.
+  <div class="section">
+    <h2>🚀 Live Deployment</h2>
+    <ul>
+      <li><strong>Base URL:</strong> <code>https://hashtag-rotator-service.vercel.app</code></li>
+      <li><strong>Ping:</strong> <code>/api/ping</code></li>
+      <li><strong>Meta:</strong> <code>/api/meta</code></li>
+      <li><strong>Kenya Trends:</strong> <code>/api/trends?region=kenya</code></li>
+      <li><strong>Webhook Listener:</strong> <code>/api/webhook-listener</code></li>
+    </ul>
   </div>
 
-  <h2>🧾 License</h2>
-  <p>MIT © Peter M. Mutiti<br>Civic infrastructure is public infrastructure. Remix responsibly.</p>
+  <div class="section">
+    <h2>📦 Endpoints Overview</h2>
+    <table>
+      <thead>
+        <tr><th>Endpoint</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>/api/trends</code></td><td>Region-aware civic hashtag trends</td></tr>
+        <tr><td><code>/api/rotator</code></td><td>Rotates hashtags for dashboards</td></tr>
+        <tr><td><code>/api/scrape-trends24</code></td><td>Scrapes live hashtags from Trends24</td></tr>
+        <tr><td><code>/api/webhook-listener</code></td><td>Verifies incoming webhooks via HMAC</td></tr>
+        <tr><td><code>/api/diagnostics</code></td><td>Emits webhook diagnostics</td></tr>
+        <tr><td><code>/api/meta</code></td><td>Returns civic metadata and endpoint manifest</td></tr>
+        <tr><td><code>/api/ping</code></td><td>Pings internal endpoints for health checks</td></tr>
+        <tr><td><code>/api/crons</code></td><td>Scheduled civic sync via Vercel cron</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>🧪 Local Testing</h2>
+    <p>Run endpoint tests with:</p>
+    <pre><code>bash test.sh</code></pre>
+    <p>Logs saved to <code>test-log-YYYYMMDD-HHMMSS.txt</code></p>
+  </div>
+
+  <div class="section">
+    <h2>🔐 Environment Variables</h2>
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>WEBHOOK_SECRET</code></td><td>HMAC verification for webhooks</td></tr>
+        <tr><td><code>GITHUB_WEBHOOK_SECRET</code></td><td>GitHub webhook signature check</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>🛠️ Build Process</h2>
+    <p>Civic hashtags are scraped and emitted to <code>data/hashtags.json</code> via:</p>
+    <pre><code>npm run build</code></pre>
+    <p>This runs <code>build.js</code> and populates fallback-aware, timestamped JSON.</p>
+  </div>
+
+  <div class="section">
+    <h2>🧭 Rewrite Routes</h2>
+    <table>
+      <thead>
+        <tr><th>Route</th><th>Destination</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>/kenya-trends</code></td><td><code>/api/trends?region=kenya</code></td></tr>
+        <tr><td><code>/trends/:region</code></td><td><code>/api/trends?region=:region</code></td></tr>
+        <tr><td><code>/cyber-kendra</code></td><td><code>/api/index?source=CyberKendra</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>🧑‍💻 Maintainer</h2>
+    <p><strong>Peter M. Mutiti</strong><br/>
+    Civic advisory architect & modular documentation specialist<br/>
+    📍 Kiambu County, Kenya</p>
+  </div>
+
+  <div class="section">
+    <h2>📜 License</h2>
+    <p>MIT — Remix, audit, and deploy freely.</p>
+  </div>
+
 </body>
 </html>
