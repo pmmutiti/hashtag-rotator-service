@@ -88,7 +88,8 @@
     }
   ],
   "env": {
-    "WEBHOOK_SECRET": "@webhook-secret",
-    "GITHUB_WEBHOOK_SECRET": "@github-webhook-secret"
+    "WEBHOOK_SECRET": "civic-rotator-override-9f3a7c2e1b6d4a8f3c1e2a7d9b5f6c3e",
+    "GITHUB_WEBHOOK_SECRET": "github-rotator-verify-7e4c1d9a2f8b6e3c9a0d5b2f1c7e8a4d"
   }
 }
+
